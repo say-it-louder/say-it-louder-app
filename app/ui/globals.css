@@ -7,7 +7,27 @@
   --background: 19 19 26;
 }
 
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+svg {
+  font-size: 2.5rem;
+  cursor: pointer;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background));
+}
+
+@layer components {
+  .primary-link {
+    @apply text-base border-2 px-4 rounded-md border-logo-500 grid place-content-center py-1 hover:brightness-75;
+  }
+  .simple-link {
+    @apply hover:brightness-75 text-base;
+  }
 }
