@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background: 19 19 26;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+svg {
+  font-size: 2.5rem;
+  cursor: pointer;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background));
+}
+
+@layer components {
+  .primary-link {
+    @apply text-base border-2 px-4 rounded-md border-logo-500 grid place-content-center py-1 hover:brightness-75;
+  }
+  .simple-link {
+    @apply hover:brightness-75 text-base;
+  }
+  .simple-anchor {
+    @apply text-logo-500 font-normal hover:brightness-75 cursor-pointer;
+  }
+  .primary-input {
+    @apply px-4 py-3 rounded-md outline-none bg-background-500 w-full focus:outline-logo-700;
+  }
+  .container-input {
+    @apply flex flex-col items-start capitalize gap-1 w-full;
+
+    & label {
+      @apply font-normal text-base;
+    }
+
+    & input {
+      @apply px-4 py-3 rounded-md outline-none bg-background-500 w-full focus:outline-logo-700;
+    }
+  }
+}
