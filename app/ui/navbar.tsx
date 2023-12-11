@@ -1,14 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { HiMiniBars3, HiMiniMagnifyingGlass } from "react-icons/hi2";
 import { khand } from "./fonts";
 import Search from "./search";
 import Logo from "./logo";
+import { useOutsideClick } from "../lib/hooks/useOutsideClick";
 
 export default function Navbar() {
   const [isSearching, setIsSearching] = useState(false);
+  const targetRef = useRef(null);
+
+  function onOutsideClick(): void {
+    if (isSearching) {
+      setIsSearching(false);
+    }
+  }
+
+  useOutsideClick(targetRef, onOutsideClick);
 
   return (
     <nav
@@ -34,7 +44,7 @@ export default function Navbar() {
             </Link>
           </>
         )}
-        {isSearching && <Search className="md:hidden" />}
+        {isSearching && <Search className="md:hidden" refProp={targetRef} />}
       </div>
     </nav>
   );

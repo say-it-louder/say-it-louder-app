@@ -3,8 +3,15 @@ import Image from "next/image";
 
 export default function Logo() {
   return (
-    <Link href="/">
-      <Image src="/logo.svg" alt="Logo" height={40} width={89.17} />
+    <Link href="/" className="max-w-[90px]">
+      <Image
+        src="/logo.svg"
+        priority={true}
+        alt="Logo"
+        width={90}
+        height={40}
+        style={{ width: "auto" }}
+      />
     </Link>
   );
 }
