@@ -32,7 +32,7 @@ export default function SignUpLayout({
         <a className="simple-anchor">terms of use</a> and{" "}
         <a className="simple-anchor">code of conduct</a>
       </p>
-      <p className="text-sm mt-20 border-t-2 border-slate-500/50 pt-2 w-full">
+      <p className="text-sm mt-14 border-t-2 border-slate-500/50 pt-2 w-full">
         Already have an account?{" "}
         <Link href="/login" className="simple-link text-logo-500">
           Log in
