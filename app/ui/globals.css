@@ -36,11 +36,18 @@ body {
   .primary-input {
     @apply px-4 py-3 rounded-md outline-none bg-background-500 w-full focus:outline-logo-700;
   }
+  .error-message {
+    @apply text-red-700 text-xs md:tracking-wide md:text-sm lowercase first-letter:uppercase;
+  }
   .container-input {
     @apply flex flex-col items-start capitalize gap-1 w-full;
 
     & label {
       @apply font-normal text-base;
+    }
+
+    & .container-error {
+      @apply w-full flex justify-between items-center;
     }
 
     & input {

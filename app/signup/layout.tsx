@@ -9,7 +9,7 @@ export default function SignUpLayout({
 }) {
   return (
     <div
-      className={` flex flex-col justify-center text-center items-center gap-4 px-4 md:px-8 lg:max-w-3xl m-auto`}
+      className={` flex flex-col justify-center text-center items-center gap-4 px-4 pb-4 md:px-8 lg:max-w-3xl m-auto`}
     >
       <div className="max-w-[110px] mt-10">
         <Logo />
@@ -32,7 +32,7 @@ export default function SignUpLayout({
         <a className="simple-anchor">terms of use</a> and{" "}
         <a className="simple-anchor">code of conduct</a>
       </p>
-      <p className="text-sm mt-20 border-t-2 border-slate-500/50 pt-2 w-full">
+      <p className="text-sm mt-4 border-t-2 border-slate-500/50 pt-2 w-full">
         Already have an account?{" "}
         <Link href="/login" className="simple-link text-logo-500">
           Log in
