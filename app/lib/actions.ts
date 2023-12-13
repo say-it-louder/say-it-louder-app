@@ -1,45 +1,13 @@
 "use server";
-import { z } from "zod";
 import { sql } from "@vercel/postgres";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
-const bcrypt = require("bcrypt");
-
-const FormSchema = z.object({
-  fullName: z
-    .string()
-    .min(3, {
-      message: "Name must be at least 3 characters long",
-    })
-    .max(50, {
-      message: "Name must be less than 50 characters long",
-    }),
-  email: z.string().email({
-    message: "Please enter a valid email",
-  }),
-  password: z.string().min(6, {
-    message: "Password must be at least 6 characters long",
-  }),
-  confirmPassword: z.string().min(6, {
-    message: "Password must be at least 6 characters long",
-  }),
-});
-
-export type State = {
-  errors?: {
-    fullName?: string[];
-    email?: string[];
-    password?: string[];
-    confirmPassword?: string[];
-  };
-  message?: string | null;
-};
+import { signUpSchema } from "./definitions";
+import bcrypt from "bcrypt";
 
 export async function createUser(prevState: any, formData: FormData) {
-  //// Validate form fields using Zod
-
-  const validatedFields = FormSchema.safeParse({
-    fullName: formData.get("userName"),
+  // Validate form fields using Zod
+  const validatedFields = signUpSchema.safeParse({
+    fullName: formData.get("fullName"),
     email: formData.get("email"),
     password: formData.get("password"),
     confirmPassword: formData.get("confirmPassword"),
@@ -49,7 +17,7 @@ export async function createUser(prevState: any, formData: FormData) {
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Missing Fields. Failed to Create User.",
+      message: "missing fields; failed to create user.",
     };
   }
 
@@ -62,12 +30,12 @@ export async function createUser(prevState: any, formData: FormData) {
   try {
     await sql`INSERT INTO users (name, email, password, active_since)
   VALUES (${fullName}, ${email}, ${hashedPassword}, ${currentDate})`;
-    console.log("user inserted into the database");
   } catch (error) {
     return {
-      message: "Database Error: Failed to Create User.",
+      message: "database error: failed to create user.",
     };
   }
 
+  // Redirect to the login page
   redirect(`/login`);
 }
