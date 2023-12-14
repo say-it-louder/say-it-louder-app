@@ -28,11 +28,17 @@ export async function createUser(prevState: any, formData: FormData) {
 
   // Insert data into the database
   try {
+    console.log("entering to the try sentence");
     await sql`INSERT INTO users (name, email, password, active_since)
   VALUES (${fullName}, ${email}, ${hashedPassword}, ${currentDate})`;
-  } catch (error) {
+  } catch (error: any) {
+    if (error.code === "23505") {
+      return {
+        message: "the e-mail address is already registered.",
+      };
+    }
     return {
-      message: "database error: failed to create user.",
+      message: `database error: failed to create user, error code: ${error.code}`,
     };
   }
 

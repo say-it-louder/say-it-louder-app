@@ -9,7 +9,7 @@ export default function SubmitButton() {
       type="submit"
       className="primary-link w-full py-2 capitalize disabled:bg-slate-500 disabled:cursor-wait disabled:brightness-100 disabled:border-0"
     >
-      {pending ? "submitting" : "submit"}
+      {pending ? "submitting..." : "submit"}
     </button>
   );
 }

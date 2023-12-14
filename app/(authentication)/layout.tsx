@@ -1,12 +1,17 @@
+"use client";
+
 import Logo from "../ui/logo";
 import Link from "next/link";
 import { audiowide } from "../ui/fonts";
+import { usePathname } from "next/navigation";
 
 export default function SignUpLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+
   return (
     <div
       className={` flex flex-col justify-center text-center items-center gap-4 px-4 pb-4 md:px-8 lg:max-w-3xl m-auto`}
@@ -32,12 +37,22 @@ export default function SignUpLayout({
         <a className="simple-anchor">terms of use</a> and{" "}
         <a className="simple-anchor">code of conduct</a>
       </p>
-      <p className="text-sm mt-4 border-t-2 border-slate-500/50 pt-2 w-full">
-        Already have an account?{" "}
-        <Link href="/login" className="simple-link text-logo-500">
-          Log in
-        </Link>
-      </p>
+      {pathname.startsWith("/signup") && (
+        <p className="text-sm mt-4 border-t-2 border-slate-500/50 pt-2 w-full">
+          Already have an account?{" "}
+          <Link href="/login" className="simple-link text-logo-500">
+            Log in
+          </Link>
+        </p>
+      )}
+      {pathname === "/login" && (
+        <p className="text-sm mt-4 border-t-2 border-slate-500/50 pt-2 w-full">
+          New in the community?{" "}
+          <Link href="/signup" className="simple-link text-logo-500">
+            Create account
+          </Link>
+        </p>
+      )}
     </div>
   );
 }

@@ -1,8 +1,8 @@
-import LinkBtn from "../ui/linkBtn";
+import LinkBtn from "@/app/ui/linkBtn";
 import { FaGoogle, FaGithub } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 
-export default function SignUp() {
+export default function SignUpPage() {
   return (
     <div className="space-y-4 w-full">
       <LinkBtn label="sing up with google" icon={FaGoogle} href="/" />
