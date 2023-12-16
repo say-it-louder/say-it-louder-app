@@ -4,7 +4,7 @@ import { useFormState } from "react-dom";
 import { createUser } from "@/app/lib/actions";
 import SubmitButton from "@/app/ui/submitButton";
 
-export default function SignUpMail() {
+export default function SignUpForm() {
   const [state, dispatch] = useFormState(createUser, null);
 
   return (
