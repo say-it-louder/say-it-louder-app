@@ -1,12 +1,12 @@
 "use server";
 import { sql } from "@vercel/postgres";
 import { redirect } from "next/navigation";
-import { signUpSchema } from "./definitions";
+import { SignUpSchema } from "./definitions";
 import bcrypt from "bcrypt";
 
 export async function createUser(prevState: any, formData: FormData) {
   // Validate form fields using Zod
-  const validatedFields = signUpSchema.safeParse({
+  const validatedFields = SignUpSchema.safeParse({
     fullName: formData.get("fullName"),
     email: formData.get("email"),
     password: formData.get("password"),
@@ -45,3 +45,20 @@ export async function createUser(prevState: any, formData: FormData) {
   // Redirect to the login page
   redirect(`/login`);
 }
+
+// Login action
+export async function authenticate(prevState: any, formData: FormData) {
+  console.log(formData);
+}
+
+/* // Login action
+export async function authenticate(prevState: any, formData: FormData) {
+  try {
+    await signIn("credentials", Object.fromEntries(formData));
+  } catch (error) {
+    if ((error as Error).message.includes("CredentialsSignin")) {
+      return "CredentialsSignin";
+    }
+    throw error;
+  }
+} */

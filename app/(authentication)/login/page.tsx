@@ -1,9 +1,15 @@
-import LoginForm from "@/app/ui/loginForm";
+import LoginForm from "@/app/ui/auth/loginForm";
 import LinkBtn from "../../ui/linkBtn";
 import { FaGoogle, FaGithub } from "react-icons/fa";
 import { khand } from "@/app/ui/fonts";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
-export default function LogInPage() {
+export default async function LogInPage() {
+  const session = await getServerSession();
+  if (session) {
+    redirect("/");
+  }
   return (
     <div className="w-full space-y-2">
       <div className="w-full space-y-2">
