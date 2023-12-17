@@ -26,8 +26,8 @@ export default function LoginForm() {
       const response = await signIn("credentials", {
         email,
         password,
-        redirect: false,
         callbackUrl: "/dashboard",
+        redirect: false,
       });
 
       if (response?.error) {
@@ -74,7 +74,7 @@ export default function LoginForm() {
           <input
             type="checkbox"
             name="check"
-            className="accent-logo-700 w-4 h-4"
+            className="accent-logo-500 w-4 h-4"
           />
           <label htmlFor="check" className="font-light text-base">
             remember me
