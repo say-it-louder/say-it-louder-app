@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import GitHubProvider from "next-auth/providers/github";
 import { z } from "zod";
 import { User } from "@/app/lib/definitions";
 import { sql } from "@vercel/postgres";
@@ -49,6 +50,10 @@ const handler = NextAuth({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID as string,
+      clientSecret: process.env.GITHUB_SECRET as string,
+    }),
   ],
   callbacks: {
     async signIn({ user, account }) {
@@ -57,7 +62,10 @@ const handler = NextAuth({
           return true;
         }
 
-        if (account?.provider === "google" && user) {
+        if (
+          (account?.provider === "google" || account?.provider === "github") &&
+          user
+        ) {
           const { name, email } = user;
 
           if (!name || !email) {
@@ -76,7 +84,6 @@ const handler = NextAuth({
 
           return true;
         }
-
         console.error("Invalid account provider:", account?.provider);
         return false;
       } catch (error) {
