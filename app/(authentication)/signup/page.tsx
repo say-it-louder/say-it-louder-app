@@ -1,8 +1,8 @@
 import LinkBtn from "@/app/ui/linkBtn";
-import { FaGoogle, FaGithub } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import SignInButton from "@/app/ui/auth/signInButton";
 
 export default async function SignUpPage() {
   const session = await getServerSession();
@@ -11,8 +11,8 @@ export default async function SignUpPage() {
   }
   return (
     <div className="space-y-4 w-full">
-      <LinkBtn label="sing up with google" icon={FaGoogle} href="/" />
-      <LinkBtn label="sing up with github" icon={FaGithub} href="/" />
+      <SignInButton provider="google" label="sing up with google" />
+      <SignInButton provider="github" label="sign up with github" />
       <LinkBtn label="sing up with mail" icon={IoMail} href="/signup/mail" />
     </div>
   );

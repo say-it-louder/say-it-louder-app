@@ -12,6 +12,11 @@ export type LinkBtnProp = {
   href: string;
 };
 
+export type AuthProviders = {
+  provider: "google" | "github";
+  label: string;
+};
+
 export const LoginSchema = z.object({
   email: z
     .string()

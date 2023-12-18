@@ -1,9 +1,12 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import GitHubProvider from "next-auth/providers/github";
 import { z } from "zod";
 import { User } from "@/app/lib/definitions";
 import { sql } from "@vercel/postgres";
 import bcrypt from "bcrypt";
+import { createUserFromProvider } from "@/app/lib/actions";
 
 async function getUser(email: string): Promise<User | undefined> {
   try {
@@ -43,22 +46,52 @@ const handler = NextAuth({
         return null;
       },
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    }),
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID as string,
+      clientSecret: process.env.GITHUB_SECRET as string,
+    }),
   ],
-  /* callbacks: {
-    async jwt({ token, account, profile }) {
-      console.log("jwt", { token, account, profile });
-      return token;
-    },
-    async session({ session, token, user }) {
-      console.log("session", { session, token, user });
-      return session;
-    },
+  callbacks: {
+    async signIn({ user, account }) {
+      try {
+        if (account?.provider === "credentials") {
+          return true;
+        }
 
-    async redirect({ url, baseUrl }) {
-      console.log("redirect", { url, baseUrl });
-      return baseUrl + "/dashboard";
+        if (
+          (account?.provider === "google" || account?.provider === "github") &&
+          user
+        ) {
+          const { name, email } = user;
+
+          if (!name || !email) {
+            console.error("Invalid user data");
+            return false;
+          }
+
+          const existingUser = await getUser(email);
+
+          if (!existingUser) {
+            console.log("User is not in the database:", name);
+            // Insert the user into the database
+            await createUserFromProvider({ name, email });
+            console.log("User saved in the database");
+          }
+
+          return true;
+        }
+        console.error("Invalid account provider:", account?.provider);
+        return false;
+      } catch (error) {
+        console.error("Error during sign-in:", error);
+        return false;
+      }
     },
-  }, */
+  },
 });
 
 export { handler as GET, handler as POST };

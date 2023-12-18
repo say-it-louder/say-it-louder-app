@@ -28,7 +28,6 @@ export async function createUser(prevState: any, formData: FormData) {
 
   // Insert data into the database
   try {
-    console.log("entering to the try sentence");
     await sql`INSERT INTO users (name, email, password, active_since)
   VALUES (${fullName}, ${email}, ${hashedPassword}, ${currentDate})`;
   } catch (error: any) {
@@ -46,19 +45,20 @@ export async function createUser(prevState: any, formData: FormData) {
   redirect(`/login`);
 }
 
-// Login action
-export async function authenticate(prevState: any, formData: FormData) {
-  console.log(formData);
-}
-
-/* // Login action
-export async function authenticate(prevState: any, formData: FormData) {
+// Create user from provider
+export async function createUserFromProvider({
+  name,
+  email,
+}: {
+  name: string;
+  email: string;
+}) {
   try {
-    await signIn("credentials", Object.fromEntries(formData));
+    const currentDate = new Date().toISOString();
+    await sql`INSERT INTO users (name, email, active_since)
+  VALUES (${name}, ${email}, ${currentDate})`;
   } catch (error) {
-    if ((error as Error).message.includes("CredentialsSignin")) {
-      return "CredentialsSignin";
-    }
-    throw error;
+    console.error("Failed to fetch user:", error);
+    throw new Error("Failed to create the user.");
   }
-} */
+}

@@ -1,9 +1,8 @@
 import LoginForm from "@/app/ui/auth/loginForm";
-import LinkBtn from "../../ui/linkBtn";
-import { FaGoogle, FaGithub } from "react-icons/fa";
 import { khand } from "@/app/ui/fonts";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import SignInButton from "@/app/ui/auth/signInButton";
 
 export default async function LogInPage() {
   const session = await getServerSession();
@@ -13,8 +12,8 @@ export default async function LogInPage() {
   return (
     <div className="w-full space-y-2">
       <div className="w-full space-y-2">
-        <LinkBtn label="log in with google" icon={FaGoogle} href="/" />
-        <LinkBtn label="log in with github" icon={FaGithub} href="/" />
+        <SignInButton provider="google" label="sign in with google" />
+        <SignInButton provider="github" label="sign in with github" />
       </div>
       <div className="flex items-center gap-4">
         <div className="w-full border-[1px] border-stone-400"></div>
