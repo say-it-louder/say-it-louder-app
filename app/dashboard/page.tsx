@@ -8,7 +8,7 @@ export default function DashboardPage() {
     console.log(session, sessionStatus);
   }
   return (
-    <div>
+    <div className="">
       <h1>Dashboard Page</h1>
 
       <button

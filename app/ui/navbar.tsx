@@ -7,8 +7,12 @@ import { khand } from "./fonts";
 import Search from "./search";
 import Logo from "./logo";
 import { useOutsideClick } from "../lib/hooks/useOutsideClick";
+import NotificationIcon from "./navbar/notification";
+import { useSession } from "next-auth/react";
+import UserMenu from "./navbar/userMenu";
 
 export default function Navbar() {
+  const { data: session } = useSession();
   const [isSearching, setIsSearching] = useState(false);
   const targetRef = useRef(null);
 
@@ -30,7 +34,7 @@ export default function Navbar() {
         <Search className="hidden md:block" />
       </div>
       <div className="flex items-center gap-2 flex-1 justify-end md:gap-4 lg:gap-6">
-        {!isSearching && (
+        {!isSearching && !session && (
           <>
             <HiMiniMagnifyingGlass
               className="hover:brightness-75 md:hidden"
@@ -45,6 +49,12 @@ export default function Navbar() {
           </>
         )}
         {isSearching && <Search className="md:hidden" refProp={targetRef} />}
+        <Link href="/posts/create" className={`primary-link hidden md:block`}>
+          Create Post
+        </Link>
+        <NotificationIcon />
+
+        {/* <UserMenu /> */}
       </div>
     </nav>
   );
