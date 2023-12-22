@@ -6,7 +6,6 @@ import { z } from "zod";
 import bcrypt from "bcrypt";
 import { createUserFromProvider } from "@/app/lib/actions";
 import { getUser } from "@/app/lib/data";
-import { User } from "@/app/lib/definitions";
 
 const handler = NextAuth({
   pages: {
@@ -108,7 +107,7 @@ const handler = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      console.log("session callback", { session, token });
+      //console.log("session callback", { session, token });
       return {
         ...session,
         user: {

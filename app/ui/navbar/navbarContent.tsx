@@ -1,18 +1,21 @@
 "use client";
-
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { HiMiniBars3, HiMiniMagnifyingGlass } from "react-icons/hi2";
-import { khand } from "./fonts";
+import { khand } from "../fonts";
 import Search from "./search";
-import Logo from "./logo";
-import { useOutsideClick } from "../lib/hooks/useOutsideClick";
-import NotificationIcon from "./navbar/notification";
+import Logo from "../logo";
+import { useOutsideClick } from "@/app/lib/hooks/useOutsideClick";
+import NotificationIcon from "./notification";
 import { useSession } from "next-auth/react";
-import UserMenu from "./navbar/userMenu";
 
-export default function Navbar() {
-  const { data: session } = useSession();
+export default function NavbarContent({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { data: session, status } = useSession();
+  console.log(session, status);
   const [isSearching, setIsSearching] = useState(false);
   const targetRef = useRef(null);
 
@@ -33,11 +36,15 @@ export default function Navbar() {
         <Logo />
         <Search className="hidden md:block" />
       </div>
-      <div className="flex items-center gap-2 flex-1 justify-end md:gap-4 lg:gap-6">
-        {!isSearching && !session && (
+      <div className="flex items-center gap-3 flex-1 justify-end md:gap-4 lg:gap-6">
+        {status === "loading" && (
+          <span className="text-center text-4xl animate-ping">...</span>
+        )}
+
+        {!isSearching && status === "unauthenticated" && (
           <>
             <HiMiniMagnifyingGlass
-              className="hover:brightness-75 md:hidden"
+              className="hover:brightness-75 md:hidden text-3xl"
               onClick={() => setIsSearching(true)}
             />
             <Link href="/login" className={`hidden md:block simple-link`}>
@@ -48,13 +55,23 @@ export default function Navbar() {
             </Link>
           </>
         )}
+        {!isSearching && status === "authenticated" && (
+          <>
+            <HiMiniMagnifyingGlass
+              className="hover:brightness-75 md:hidden  text-4xl"
+              onClick={() => setIsSearching(true)}
+            />
+            <Link
+              href="/posts/create"
+              className={`primary-link hidden md:block`}
+            >
+              Create Post
+            </Link>
+            <NotificationIcon />
+            {children} {/* UserMenu */}
+          </>
+        )}
         {isSearching && <Search className="md:hidden" refProp={targetRef} />}
-        <Link href="/posts/create" className={`primary-link hidden md:block`}>
-          Create Post
-        </Link>
-        <NotificationIcon />
-
-        {/* <UserMenu /> */}
       </div>
     </nav>
   );
