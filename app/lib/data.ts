@@ -18,7 +18,7 @@ export async function getUserAvatar(email: string) {
   noStore();
   try {
     const userAvatar = await sql`SELECT avatar FROM users WHERE email=${email}`;
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    //await new Promise((resolve) => setTimeout(resolve, 5000));
     return userAvatar.rows[0].avatar;
   } catch (error) {
     console.error("Failed to fetch user:", error);
