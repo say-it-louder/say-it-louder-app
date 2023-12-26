@@ -1,7 +1,8 @@
 import React from "react";
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
-import { khand } from "./fonts";
+import { khand } from "../fonts";
 import { SearchProp } from "@/app/lib/definitions";
+import { useOutsideClick } from "@/app/lib/hooks/useOutsideClick";
 
 export default function Search({ className, refProp }: SearchProp) {
   return (
