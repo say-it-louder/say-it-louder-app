@@ -57,6 +57,13 @@ export const SignUpSchema = LoginSchema.extend({
   path: ["confirmPassword"],
 });
 
+export const PostSchema = z.object({
+  content: z
+    .string()
+    .min(3, { message: "type at least 3 characters" })
+    .max(250, { message: "type a maximum of 250 characters" }),
+});
+
 export type User = {
   id: string;
   name: string;

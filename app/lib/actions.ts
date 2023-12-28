@@ -1,7 +1,7 @@
 "use server";
 import { sql } from "@vercel/postgres";
 import { redirect } from "next/navigation";
-import { SignUpSchema } from "./definitions";
+import { SignUpSchema, PostSchema } from "@/app/lib/definitions";
 import bcrypt from "bcrypt";
 
 export async function createUser(prevState: any, formData: FormData) {
@@ -61,4 +61,32 @@ export async function createUserFromProvider({
     console.error("Failed to fetch user:", error);
     throw new Error("Failed to create the user.");
   }
+}
+
+export async function createPost(
+  userId: string,
+  prevState: any,
+  formData: FormData
+) {
+  const validatedFields = PostSchema.safeParse({
+    content: formData.get("content"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "missing fields; failed to create post.",
+    };
+  }
+  const { content: postContent } = validatedFields.data;
+
+  try {
+    await sql`INSERT INTO POSTS (user_id, content) VALUES (${userId}, ${postContent})
+    `;
+  } catch (error: any) {
+    return {
+      message: `database error: failed to create post, error code: ${error.code}`,
+    };
+  }
+  redirect(`/dashboard`);
 }
