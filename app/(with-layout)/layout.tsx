@@ -1,6 +1,7 @@
 import "@/app/ui/globals.css";
-import { poppins } from "./ui/fonts";
-import { Providers } from "./ui/provider";
+import { poppins } from "@/app/ui/fonts";
+import { Providers } from "@/app/ui/provider";
+import Navbar from "@/app/ui/navbar/navbar";
 
 export default async function RootLayout({
   children,
@@ -10,7 +11,10 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={poppins.className}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <Navbar />
+          {children}
+        </Providers>
       </body>
     </html>
   );
