@@ -11,7 +11,7 @@ export default async function UserMenu() {
   const userAvatar = await getUserAvatar(session?.user?.email);
 
   return (
-    <Link href={"/"} className="hover:brightness-75">
+    <Link href={"/dashboard"} className="hover:brightness-75">
       <Image
         src={`/avatars/${userAvatar}.png`}
         alt="avatar"
