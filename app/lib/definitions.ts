@@ -74,3 +74,16 @@ export type User = {
   is_active: boolean;
   active_since: string;
 };
+
+export type Post = {
+  post_id: string;
+  user_id: string;
+  created_by: string;
+  created_by_avatar: string;
+  created_at: string;
+  content: string;
+};
+
+export type PostRaw = Omit<Post, "created_at"> & {
+  created_at: Date;
+};
