@@ -17,7 +17,6 @@ export default async function UserMenu() {
         alt="avatar"
         width={35}
         height={35}
-        objectFit="cover"
         className="bg-logo-500 rounded-full"
       ></Image>
     </Link>

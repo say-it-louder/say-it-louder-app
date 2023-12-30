@@ -57,6 +57,13 @@ export const SignUpSchema = LoginSchema.extend({
   path: ["confirmPassword"],
 });
 
+export const PostSchema = z.object({
+  content: z
+    .string()
+    .min(3, { message: "type at least 3 characters" })
+    .max(250, { message: "type a maximum of 250 characters" }),
+});
+
 export type User = {
   id: string;
   name: string;
@@ -66,4 +73,17 @@ export type User = {
   avatar: string;
   is_active: boolean;
   active_since: string;
+};
+
+export type Post = {
+  post_id: string;
+  user_id: string;
+  created_by: string;
+  created_by_avatar: string;
+  created_at: string;
+  content: string;
+};
+
+export type PostRaw = Omit<Post, "created_at"> & {
+  created_at: Date;
 };
