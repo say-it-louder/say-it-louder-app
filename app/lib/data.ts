@@ -9,9 +9,6 @@ export async function getUser(email: string): Promise<User | undefined> {
     const user = await sql<User>`SELECT * FROM users WHERE email=${email}`;
     const userResult = user.rows[0];
     //await new Promise((resolve) => setTimeout(resolve, 3000));
-    if (!userResult) {
-      throw new Error(`No user found with email: ${email}`);
-    }
     return userResult;
   } catch (error) {
     console.error("Failed to fetch user:", error);
