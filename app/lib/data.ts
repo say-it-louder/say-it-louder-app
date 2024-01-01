@@ -9,9 +9,6 @@ export async function getUser(email: string): Promise<User | undefined> {
     const user = await sql<User>`SELECT * FROM users WHERE email=${email}`;
     const userResult = user.rows[0];
     //await new Promise((resolve) => setTimeout(resolve, 3000));
-    if (!userResult) {
-      throw new Error(`No user found with email: ${email}`);
-    }
     return userResult;
   } catch (error) {
     console.error("Failed to fetch user:", error);
@@ -36,7 +33,7 @@ export async function getUserAvatar(email: string) {
   }
 }
 
-export async function getAllPosts() {
+export async function getAllPosts(query: string) {
   noStore();
   try {
     const data = await sql<PostRaw>`SELECT 
@@ -50,6 +47,9 @@ export async function getAllPosts() {
     posts p 
   JOIN 
     users u ON p.user_id = u.id
+  WHERE
+    u.name ILIKE ${`%${query}%`} OR
+    p.content ILIKE ${`%${query}%`}
   ORDER BY
       p.created_at DESC;`;
 
@@ -57,7 +57,7 @@ export async function getAllPosts() {
       ...post,
       created_at: formatDate(post.created_at),
     }));
-
+    //await new Promise((resolve) => setTimeout(resolve, 3000));
     return posts;
   } catch (error) {
     console.error("Failed to fetch posts:", error);

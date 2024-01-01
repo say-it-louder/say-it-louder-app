@@ -72,7 +72,7 @@ export type User = {
   bio: string;
   avatar: string;
   is_active: boolean;
-  active_since: string;
+  active_since: Date;
 };
 
 export type Post = {

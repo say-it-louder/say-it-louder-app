@@ -52,11 +52,14 @@ const handler = NextAuth({
         if (account?.provider === "credentials") {
           return true;
         }
+        console.log(user);
         if (
           (account?.provider === "google" || account?.provider === "github") &&
           user
         ) {
+          console.log("entering to singin callback");
           const { name, email } = user;
+          console.log(user, email);
           if (!name || !email) {
             console.error("Invalid user data");
             return false;

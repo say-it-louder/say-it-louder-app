@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { GoCodeOfConduct } from "react-icons/go";
 import { MdOutlinePrivacyTip } from "react-icons/md";
@@ -6,13 +7,19 @@ import { SiLinkedin, SiGithub } from "react-icons/si";
 import { FaGlobe } from "react-icons/fa";
 import { useSession } from "next-auth/react";
 import { audiowide } from "./fonts";
+import SignOutButton from "./auth/signOutButton";
 
 export default function FooterSide() {
   const { status } = useSession();
-  console.log(status);
+
   return (
-    <section className="p-2 h-[90vh] flex flex-col justify-between">
+    <section className="p-2 flex h-[calc(100vh-65.36px)] flex-col justify-between top-[64.36px] sticky z-10 bg-background-700">
       <div className="">
+        {status === "authenticated" && (
+          <div>
+            <SignOutButton />
+          </div>
+        )}
         {status === "unauthenticated" && (
           <div className="flex flex-col items-center justify-center text-center gap-2 bg-background-500 rounded-md p-2">
             <p className="font-bold text-lg max-w-[290px] ">
