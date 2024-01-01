@@ -8,15 +8,16 @@ import { useDebouncedCallback } from "use-debounce";
 export default function Search({ className, refProp }: SearchProp) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const router = useRouter();
+  const { replace } = useRouter();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   // Clean input value once route change
   useEffect(() => {
-    if (inputRef.current) {
+    const url = `${pathname}?${searchParams}`;
+    if (!url.includes("query") && inputRef.current) {
       inputRef.current.value = "";
     }
-  }, [pathname]);
+  }, [pathname, searchParams]);
 
   const handleSearch = useDebouncedCallback((term) => {
     const params = new URLSearchParams(searchParams);
@@ -25,7 +26,7 @@ export default function Search({ className, refProp }: SearchProp) {
     } else {
       params.delete("query");
     }
-    router.replace(`${pathname}?${params.toString()}`);
+    replace(`${pathname}?${params.toString()}`);
   }, 300);
 
   return (

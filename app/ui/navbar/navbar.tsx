@@ -5,7 +5,7 @@ import { AvatarSkeleton } from "../skeletons";
 
 export default function Navbar() {
   return (
-    <header className="">
+    <header className="sticky top-0 w-full z-10">
       <NavbarContent>
         <Suspense fallback={<AvatarSkeleton />}>
           <UserMenu />
