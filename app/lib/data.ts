@@ -33,7 +33,7 @@ export async function getUserAvatar(email: string) {
   }
 }
 
-export async function getAllPosts() {
+export async function getAllPosts(query: string) {
   noStore();
   try {
     const data = await sql<PostRaw>`SELECT 
@@ -47,6 +47,9 @@ export async function getAllPosts() {
     posts p 
   JOIN 
     users u ON p.user_id = u.id
+  WHERE
+    u.name ILIKE ${`%${query}%`} OR
+    p.content ILIKE ${`%${query}%`}
   ORDER BY
       p.created_at DESC;`;
 
@@ -54,7 +57,7 @@ export async function getAllPosts() {
       ...post,
       created_at: formatDate(post.created_at),
     }));
-
+    //await new Promise((resolve) => setTimeout(resolve, 3000));
     return posts;
   } catch (error) {
     console.error("Failed to fetch posts:", error);
