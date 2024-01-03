@@ -1,6 +1,7 @@
 import Statistics from "@/app/ui/dashboard/statistics";
 import CreatePostForm from "@/app/ui/posts/createPostForm";
 import PostList from "@/app/ui/posts/postList";
+import Link from "next/link";
 import { IoSettingsOutline } from "react-icons/io5";
 
 export default function DashboardPage() {
@@ -8,7 +9,9 @@ export default function DashboardPage() {
     <div className="px-2 py-4 space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="font-bold text-2xl">Dashboard Page</h1>
-        <IoSettingsOutline className="text-2xl" />
+        <Link href="/dashboard/settings" className="hover:brightness-75">
+          <IoSettingsOutline className="text-2xl" />
+        </Link>
       </div>
       <Statistics />
       <div className="px-10">

@@ -13,7 +13,7 @@ export default function FooterSide() {
   const { status } = useSession();
 
   return (
-    <section className="p-2 flex h-[calc(100vh-65.36px)] flex-col justify-between top-[64.36px] sticky z-10 bg-background-700">
+    <section className="p-2 flex h-[calc(100vh-65.36px)] flex-col justify-between md:top-[64.36px] md:sticky md:z-10 md:bg-background-700">
       <div className="">
         {status === "authenticated" && (
           <div>

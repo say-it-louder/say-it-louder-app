@@ -14,7 +14,7 @@ export default async function RootLayout({
       <body className={poppins.className}>
         <Providers>
           <Navbar />
-          <main className="grid md:grid-cols-3 lg:grid-cols-4 sticky top-0">
+          <main className="grid md:grid-cols-3 lg:grid-cols-4">
             <section className="hidden md:block">
               <FooterSide />
             </section>
