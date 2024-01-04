@@ -1,8 +1,7 @@
-import { getAllPosts } from "@/app/lib/data";
 import Post from "@/app/ui/posts/post";
+import { Post as PostDef } from "@/app/lib/definitions";
 
-export default async function PostList({ query }: { query: string }) {
-  const posts = await getAllPosts(query);
+export default async function PostList({ posts }: { posts: PostDef[] }) {
   const arePost = posts.length === 0;
   return (
     <div className="w-ful flex flex-col gap-2">

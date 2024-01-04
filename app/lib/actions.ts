@@ -1,7 +1,11 @@
 "use server";
 import { sql } from "@vercel/postgres";
 import { redirect } from "next/navigation";
-import { SignUpSchema, PostSchema } from "@/app/lib/definitions";
+import {
+  SignUpSchema,
+  PostSchema,
+  UpdateUserInfoSchema,
+} from "@/app/lib/definitions";
 import bcrypt from "bcrypt";
 
 export async function createUser(prevState: any, formData: FormData) {
@@ -87,4 +91,34 @@ export async function createPost(
     };
   }
   redirect(`/dashboard`);
+}
+
+export async function updateUserInfo(
+  userId: string,
+  prevState: any,
+  formData: FormData
+) {
+  const validatedFields = UpdateUserInfoSchema.safeParse({
+    avatarSelection: formData.get("avatarSelection"),
+    userName: formData.get("userName"),
+    userBio: formData.get("userBio"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "missing fields; failed to update user info.",
+    };
+  }
+  const { avatarSelection, userName, userBio } = validatedFields.data;
+  //console.log(avatarSelection, userName, userBio, userId);
+  try {
+    await sql`UPDATE users SET avatar= ${avatarSelection}, name = ${userName},      bio = ${userBio} WHERE id = ${userId}
+    `;
+  } catch (error: any) {
+    return {
+      message: `database error: failed to update user, ${error}, error code: ${error.code}`,
+    };
+  }
+  redirect("/dashboard");
 }

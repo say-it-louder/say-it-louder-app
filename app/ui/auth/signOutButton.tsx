@@ -9,7 +9,7 @@ export default function SignOutButton() {
         signOut();
       }}
     >
-      <div className="hidden md:block">Sign Out</div>
+      <div className="">Sign Out</div>
     </button>
   );
 }
