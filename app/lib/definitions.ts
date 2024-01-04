@@ -75,11 +75,19 @@ export type User = {
   active_since: Date;
 };
 
+export type UpdatableUserInfo = {
+  id: string;
+  name: string;
+  bio: string;
+  avatar: string;
+};
+
 export type Post = {
   post_id: string;
   user_id: string;
   created_by: string;
   created_by_avatar: string;
+  user_email: string;
   created_at: string;
   content: string;
 };
@@ -87,3 +95,38 @@ export type Post = {
 export type PostRaw = Omit<Post, "created_at"> & {
   created_at: Date;
 };
+
+export const AVATARS = [
+  "avatar1",
+  "avatar2",
+  "avatar3",
+  "avatar4",
+  "avatar5",
+  "avatar6",
+  "avatar7",
+  "avatar8",
+  "avatar9",
+  "avatar10",
+] as const;
+
+export const UpdateUserInfoSchema = z.object({
+  avatarSelection: z.enum(AVATARS, {
+    invalid_type_error: "Wrong avatar selection",
+  }),
+  userName: z
+    .string()
+    .min(3, {
+      message: "name must be at least 3 characters long",
+    })
+    .max(50, {
+      message: "name must be less than 50 characters long",
+    }),
+  userBio: z
+    .string()
+    .min(3, {
+      message: "bio must be at least 3 characters long",
+    })
+    .max(50, {
+      message: "bio must be less than 50 characters long",
+    }),
+});

@@ -1,6 +1,6 @@
 import { sql } from "@vercel/postgres";
 import { unstable_noStore as noStore } from "next/cache";
-import { User, PostRaw } from "@/app/lib/definitions";
+import { User, PostRaw, UpdatableUserInfo } from "@/app/lib/definitions";
 import { formatDate } from "@/app/lib/utils";
 
 export async function getUser(email: string): Promise<User | undefined> {
@@ -33,25 +33,78 @@ export async function getUserAvatar(email: string) {
   }
 }
 
+export async function getUpdatableUserInfo(email: string) {
+  noStore();
+  try {
+    const updatableUserInfo =
+      await sql<UpdatableUserInfo>`SELECT id, name, bio, avatar FROM users WHERE email=${email}`;
+    return updatableUserInfo.rows[0];
+  } catch (error) {
+    console.error("Failed to fetch user:", error);
+    throw new Error("Failed to fetch user.");
+  }
+}
+
 export async function getAllPosts(query: string) {
   noStore();
   try {
-    const data = await sql<PostRaw>`SELECT 
-    p.id AS post_id,
-    u.id AS user_id,
-    u.name AS created_by,
-    u.avatar AS created_by_avatar,
-    p.created_at,
-    p.content
-  FROM 
-    posts p 
-  JOIN 
-    users u ON p.user_id = u.id
-  WHERE
-    u.name ILIKE ${`%${query}%`} OR
-    p.content ILIKE ${`%${query}%`}
-  ORDER BY
+    const data = await sql<PostRaw>`
+    SELECT 
+      p.id AS post_id,
+      u.id AS user_id,
+      u.name AS created_by,
+      u.avatar AS created_by_avatar,
+      p.created_at,
+      p.content
+    FROM 
+      posts p 
+    JOIN 
+      users u ON p.user_id = u.id
+    WHERE
+      u.name ILIKE ${`%${query}%`} OR
+      p.content ILIKE ${`%${query}%`}
+    ORDER BY
       p.created_at DESC;`;
+
+    const posts = data.rows.map((post) => ({
+      ...post,
+      created_at: formatDate(post.created_at),
+    }));
+    //await new Promise((resolve) => setTimeout(resolve, 3000));
+    return posts;
+  } catch (error) {
+    console.error("Failed to fetch posts:", error);
+    throw new Error("Failed to fetch posts.");
+  }
+}
+
+export async function getPostByUser({
+  email,
+  query,
+}: {
+  email: string;
+  query: string;
+}) {
+  noStore();
+  try {
+    const data = await sql<PostRaw>`
+    SELECT 
+      p.id AS post_id,
+      u.id AS user_id,
+      u.name AS created_by,
+      u.avatar AS created_by_avatar,
+      u.email AS user_email,
+      p.created_at,
+      p.content
+    FROM 
+      posts p 
+    JOIN 
+      users u ON p.user_id = u.id
+    WHERE
+      u.email = ${`${email}`} AND
+      p.content ILIKE ${`%${query}%`} 
+    ORDER BY
+      p.created_at DESC`;
 
     const posts = data.rows.map((post) => ({
       ...post,

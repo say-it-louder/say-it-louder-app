@@ -1,44 +1,18 @@
-import Image from "next/image";
+import { getUpdatableUserInfo } from "@/app/lib/data";
+import DeleteAccount from "@/app/ui/auth/deleteAccount";
+import UpdateUserForm from "@/app/ui/dashboard/updateUserForm";
+import { getServerSession } from "next-auth";
 
-export default function Settings() {
+export default async function Settings() {
+  const session = await getServerSession();
+  const currentUserEmail = session?.user?.email;
+  const userInfo = await getUpdatableUserInfo(currentUserEmail as string);
+
   return (
-    <div>
-      <h1>Settings</h1>
-      <form action="">
-        <div>
-          <label htmlFor="">avatar</label>
-          <div>
-            <input
-              type="radio"
-              id="avatar1"
-              name="avatarSelection"
-              value="avatar1"
-              className=""
-            />
-            <label
-              className="bg-logo-500 inline-grid w-max place-content-center rounded-full cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105 focus:bg-red-500"
-              role="div"
-              htmlFor="avatar1"
-            >
-              <Image
-                src="/avatars/avatar1.png"
-                alt="user profile avatar"
-                width={65}
-                className="rounded-full"
-                height={65}
-              />
-            </label>
-            <label className="bg-red-600 w-fit">
-              <input type="radio" name="avatarSelection" value="avatar1" />
-              <Image src="/avatars/avatar1.png" alt="" width={67} height={67} />
-            </label>
-            <label>
-              <input type="radio" name="avatarSelection" value="avatar1" />
-              <Image src="/avatars/avatar1.png" alt="" width={67} height={67} />
-            </label>
-          </div>
-        </div>
-      </form>
+    <div className="px-2 py-4 flex flex-col gap-4">
+      <h1 className="font-bold text-2xl capitalize">settings</h1>
+      <UpdateUserForm user={userInfo} />
+      <DeleteAccount userId={userInfo.id} />
     </div>
   );
 }
