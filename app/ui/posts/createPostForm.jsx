@@ -3,15 +3,23 @@ import { createPost } from "@/app/lib/actions";
 import { useSession } from "next-auth/react";
 import { useFormState } from "react-dom";
 import SubmitButton from "@/app/ui/submitButton";
+import { useEffect, useRef } from "react";
 
 export default function CreatePostForm() {
   const { data: session } = useSession();
   const userId = session?.user.id;
   const createPostWithId = createPost.bind(null, userId);
   const [state, dispatch] = useFormState(createPostWithId, null);
+  const formRef = useRef(null);
 
   return (
-    <form action={dispatch}>
+    <form
+      action={async (formData) => {
+        await dispatch(formData);
+        formRef.current.reset();
+      }}
+      ref={formRef}
+    >
       <div>
         <textarea
           type="text"
