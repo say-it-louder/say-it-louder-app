@@ -1,4 +1,5 @@
 "use server";
+import { unstable_noStore as noStore } from "next/cache";
 import { sql } from "@vercel/postgres";
 import { redirect } from "next/navigation";
 import {
@@ -64,12 +65,13 @@ export async function createUserFromProvider({
     throw new Error("Failed to create the user.");
   }
 }
-
+// create post
 export async function createPost(
   userId: string,
   prevState: any,
   formData: FormData
 ) {
+  noStore();
   const validatedFields = PostSchema.safeParse({
     content: formData.get("content"),
   });
@@ -98,6 +100,7 @@ export async function updateUserInfo(
   prevState: any,
   formData: FormData
 ) {
+  noStore();
   const validatedFields = UpdateUserInfoSchema.safeParse({
     avatarSelection: formData.get("avatarSelection"),
     userName: formData.get("userName"),
@@ -111,10 +114,9 @@ export async function updateUserInfo(
     };
   }
   const { avatarSelection, userName, userBio } = validatedFields.data;
-  //console.log(avatarSelection, userName, userBio, userId);
+
   try {
-    await sql`UPDATE users SET avatar= ${avatarSelection}, name = ${userName},      bio = ${userBio} WHERE id = ${userId}
-    `;
+    await sql`UPDATE users SET avatar= ${avatarSelection}, name = ${userName},      bio = ${userBio} WHERE id = ${userId}`;
   } catch (error: any) {
     return {
       message: `database error: failed to update user, ${error}, error code: ${error.code}`,
