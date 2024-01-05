@@ -1,6 +1,6 @@
 export default function Statistics() {
   return (
-    <div className="flex m-auto w-fit bg-background-500 gap-8 p-4 rounded-md">
+    <div className="flex w-fit bg-background-500 gap-8 p-4 rounded-md">
       <div className="flex flex-col justify-center items-center">
         <span className="font-bold text-2xl">608</span>
         <span className="font-light text-xs">Posts</span>

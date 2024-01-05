@@ -25,7 +25,9 @@ export default async function DashboardPage({
           <IoSettingsOutline className="text-2xl" />
         </Link>
       </div>
-      <Statistics />
+      <div className="flex justify-center">
+        <Statistics />
+      </div>
       <div className="px-10">
         <CreatePostForm />
       </div>
