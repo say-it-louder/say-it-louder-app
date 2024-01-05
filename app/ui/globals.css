@@ -25,10 +25,10 @@ body {
 
 @layer components {
   .primary-link {
-    @apply text-base border-2 px-4 rounded-md border-logo-500 grid place-content-center py-1 hover:brightness-75;
+    @apply text-base border-2 px-4 rounded-md border-logo-500 grid place-content-center py-1 hover:brightness-75 capitalize;
   }
   .simple-link {
-    @apply hover:brightness-75 text-base;
+    @apply hover:brightness-75 text-base capitalize;
   }
   .simple-anchor {
     @apply text-logo-500 font-normal hover:brightness-75 cursor-pointer;

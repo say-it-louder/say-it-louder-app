@@ -129,6 +129,7 @@ export async function deletePost(postId: string) {
   try {
     await sql`DELETE FROM posts WHERE id = ${postId}`;
     revalidatePath("/");
+    //await new Promise((resolve) => setTimeout(resolve, 5000));
     return { message: "Deleted post." };
   } catch (error) {
     return { message: "Database Error: Failed to Delete Invoice." };

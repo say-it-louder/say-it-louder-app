@@ -24,7 +24,7 @@ export default function NavbarContent({
   const [isSearching, setIsSearching] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const targetRef = useRef(null);
-  useOutsideClick(targetRef, () => setIsSearching(false));
+  useOutsideClick(targetRef, () => setIsSearching(false), isSearching);
 
   useEffect(() => {
     function handleResize() {
@@ -86,7 +86,7 @@ export default function NavbarContent({
                 onClick={() => setIsSearching(true)}
               />
               <Link
-                href="/posts/create"
+                href="/dashboard"
                 className={`primary-link hidden md:block`}
               >
                 Create Post
