@@ -1,5 +1,5 @@
 "use server";
-import { unstable_noStore as noStore } from "next/cache";
+import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { sql } from "@vercel/postgres";
 import { redirect } from "next/navigation";
 import {
@@ -94,7 +94,7 @@ export async function createPost(
   }
   redirect(`/dashboard`);
 }
-
+// Update user information
 export async function updateUserInfo(
   userId: string,
   prevState: any,
@@ -123,4 +123,15 @@ export async function updateUserInfo(
     };
   }
   redirect("/dashboard");
+}
+// Delete post
+export async function deletePost(postId: string) {
+  try {
+    await sql`DELETE FROM posts WHERE id = ${postId}`;
+    revalidatePath("/");
+    //await new Promise((resolve) => setTimeout(resolve, 5000));
+    return { message: "Deleted post." };
+  } catch (error) {
+    return { message: "Database Error: Failed to Delete Invoice." };
+  }
 }

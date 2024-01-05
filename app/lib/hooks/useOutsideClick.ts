@@ -2,11 +2,12 @@ import { useEffect } from "react";
 
 export function useOutsideClick(
   targetRef: React.RefObject<HTMLElement>,
-  onOutsideClick: () => void
+  onOutsideClick: () => void,
+  isOpen: boolean
 ) {
   useEffect(() => {
     const handleClickOutside = (e: globalThis.MouseEvent) => {
-      if (!targetRef.current?.contains(e.target as Node)) {
+      if (!targetRef.current?.contains(e.target as Node) && isOpen) {
         onOutsideClick();
       }
     };
@@ -16,5 +17,5 @@ export function useOutsideClick(
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [targetRef, onOutsideClick]);
+  }, [targetRef, onOutsideClick, isOpen]);
 }
