@@ -16,6 +16,19 @@ export async function getUser(email: string): Promise<User | undefined> {
   }
 }
 
+export async function getUserById(id: string): Promise<User | undefined> {
+  noStore();
+  try {
+    const user = await sql<User>`SELECT * FROM users WHERE id=${id}`;
+    const userResult = user.rows[0];
+    //await new Promise((resolve) => setTimeout(resolve, 3000));
+    return userResult;
+  } catch (error) {
+    console.error("Failed to fetch user:", error);
+    throw new Error("Failed to fetch user.");
+  }
+}
+
 export async function getUserAvatar(email: string) {
   noStore();
   try {
