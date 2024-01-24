@@ -24,7 +24,9 @@ export default function Post({ post }: { post: Post }) {
           />
 
           <div className="flex flex-col gap-0 justify-center">
-            <span className="text-sm">{post.created_by}</span>
+            <span className="text-sm">
+              {post.user_username ? `@${post.user_username}` : post.created_by}
+            </span>
             <span className="text-xs font-extralight capitalize">
               {post.created_at}
             </span>

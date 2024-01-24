@@ -8,6 +8,7 @@ import {
   UpdateUserInfoSchema,
 } from "@/app/lib/definitions";
 import bcrypt from "bcrypt";
+import { isUsernameAvailable } from "@/app/lib/utils";
 
 export async function createUser(prevState: any, formData: FormData) {
   // Validate form fields using Zod
@@ -94,6 +95,7 @@ export async function createPost(
   }
   redirect(`/dashboard`);
 }
+
 // Update user information
 export async function updateUserInfo(
   userId: string,
@@ -103,8 +105,9 @@ export async function updateUserInfo(
   noStore();
   const validatedFields = UpdateUserInfoSchema.safeParse({
     avatarSelection: formData.get("avatarSelection"),
-    userName: formData.get("userName"),
+    userFullName: formData.get("userFullName"),
     userBio: formData.get("userBio"),
+    username: formData.get("username"),
   });
 
   if (!validatedFields.success) {
@@ -113,10 +116,20 @@ export async function updateUserInfo(
       message: "missing fields; failed to update user info.",
     };
   }
-  const { avatarSelection, userName, userBio } = validatedFields.data;
+  const { avatarSelection, userFullName, userBio, username } =
+    validatedFields.data;
 
+  const lowerUsername = username.toLowerCase().trim();
+
+  const isAvailableUsername = await isUsernameAvailable(userId, lowerUsername);
+
+  if (!isAvailableUsername)
+    return {
+      errors: { username: ["username already exists."] },
+      message: "failed to update user. try with another username",
+    };
   try {
-    await sql`UPDATE users SET avatar= ${avatarSelection}, name = ${userName},      bio = ${userBio} WHERE id = ${userId}`;
+    await sql`UPDATE users SET avatar= ${avatarSelection}, name = ${userFullName},      bio = ${userBio}, username=${lowerUsername} WHERE id = ${userId}`;
   } catch (error: any) {
     return {
       message: `database error: failed to update user, ${error}, error code: ${error.code}`,
@@ -124,6 +137,7 @@ export async function updateUserInfo(
   }
   redirect("/dashboard");
 }
+
 // Delete post
 export async function deletePost(postId: string) {
   try {
