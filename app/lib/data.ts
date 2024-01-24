@@ -50,7 +50,7 @@ export async function getUpdatableUserInfo(email: string) {
   noStore();
   try {
     const updatableUserInfo =
-      await sql<UpdatableUserInfo>`SELECT id, name, bio, avatar FROM users WHERE email=${email}`;
+      await sql<UpdatableUserInfo>`SELECT id, name, bio, avatar, username FROM users WHERE email=${email}`;
     return updatableUserInfo.rows[0];
   } catch (error) {
     console.error("Failed to fetch user:", error);
@@ -67,6 +67,7 @@ export async function getAllPosts(query: string) {
       u.id AS user_id,
       u.name AS created_by,
       u.avatar AS created_by_avatar,
+      u.username AS user_username, 
       p.created_at,
       p.content
     FROM 
@@ -106,6 +107,7 @@ export async function getPostByUser({
       u.id AS user_id,
       u.name AS created_by,
       u.avatar AS created_by_avatar,
+      u.username AS user_username, 
       u.email AS user_email,
       p.created_at,
       p.content

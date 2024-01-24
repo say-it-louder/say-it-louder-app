@@ -45,11 +45,17 @@ export default function UpdateUserForm({ user }: { user: UpdatableUserInfo }) {
           <p className="error-message">{state?.errors?.avatarSelection}</p>
         </div>
       </div>
+      {/* username unique */}
+      <div className="container-input">
+        <label htmlFor="username">Username</label>
+        <input type="text" name="username" defaultValue={user.username} />
+        <p className="error-message">{state?.errors?.username}</p>
+      </div>
       {/* user name */}
       <div className="container-input">
-        <label htmlFor="userName">Name</label>
-        <input type="text" name="userName" defaultValue={user.name} />
-        <p className="error-message">{state?.errors?.userName}</p>
+        <label htmlFor="userFullName">Name</label>
+        <input type="text" name="userFullName" defaultValue={user.name} />
+        <p className="error-message">{state?.errors?.userFullName}</p>
       </div>
       {/* user bio */}
       <div className="container-input">

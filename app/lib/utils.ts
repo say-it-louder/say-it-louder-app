@@ -1,3 +1,17 @@
+import { sql } from "@vercel/postgres";
+
+export async function isUsernameAvailable(userId: string, newUsername: string) {
+  const { rows: queryResult } =
+    await sql`SELECT id from users WHERE username = ${newUsername} AND id != ${userId}
+    `;
+
+  if (queryResult.length === 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export function formatDate(startDate: Date): string {
   const currentDate = new Date();
   // Difference in seconds

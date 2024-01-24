@@ -73,6 +73,7 @@ export type User = {
   avatar: string;
   is_active: boolean;
   active_since: Date;
+  username: string;
 };
 
 export type UpdatableUserInfo = {
@@ -80,6 +81,7 @@ export type UpdatableUserInfo = {
   name: string;
   bio: string;
   avatar: string;
+  username: string;
 };
 
 export type Post = {
@@ -87,6 +89,7 @@ export type Post = {
   user_id: string;
   created_by: string;
   created_by_avatar: string;
+  user_username: string;
   user_email: string;
   created_at: string;
   content: string;
@@ -113,7 +116,7 @@ export const UpdateUserInfoSchema = z.object({
   avatarSelection: z.enum(AVATARS, {
     invalid_type_error: "Wrong avatar selection",
   }),
-  userName: z
+  userFullName: z
     .string()
     .min(3, {
       message: "name must be at least 3 characters long",
@@ -128,5 +131,13 @@ export const UpdateUserInfoSchema = z.object({
     })
     .max(50, {
       message: "bio must be less than 50 characters long",
+    }),
+  username: z
+    .string()
+    .min(3, {
+      message: "username must be at least 3 characters long",
+    })
+    .max(50, {
+      message: "username must be less than 50 characters long",
     }),
 });
