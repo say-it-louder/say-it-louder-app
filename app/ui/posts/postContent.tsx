@@ -1,16 +1,18 @@
 import { Post } from "@/app/lib/definitions";
 import Image from "next/image";
 import Link from "next/link";
-import { getServerSession } from "next-auth";
 import DeletePostForm from "@/app/ui/posts/deletePostForm";
 import Reactions from "@/app/ui/reactions/reactionsContainer";
 
-export default async function PostContent({ post }: { post: Post }) {
-  const session = await getServerSession();
-  const currentUserEmail = session?.user.email;
-
+export default async function PostContent({
+  post,
+  currentUserEmail,
+}: {
+  post: Post;
+  currentUserEmail: string;
+}) {
   return (
-    <div className="bg-background-500 w-full p-2 space-y-4">
+    <div className="bg-background-500 space-y-4">
       <div className="flex items-center justify-between">
         <Link
           href={`/users/${post.user_id}`}
@@ -50,14 +52,7 @@ export default async function PostContent({ post }: { post: Post }) {
         <Reactions id={post.post_id} />
       </div>
       <div>
-        <p className="font-bold text-xl">{post.content}</p>
-      </div>
-      <div>
-        <h1>top comments(25)</h1>
-        <form>
-          <p>create comment form</p>
-        </form>
-        <div>comments list</div>
+        <p className="font-bold text-2xl">{post.content}</p>
       </div>
     </div>
   );

@@ -1,17 +1,47 @@
-import { getPostById } from "@/app/lib/data";
+import {
+  getCommentsByPost,
+  getNumberOfComments,
+  getPostById,
+} from "@/app/lib/data";
 import PostContent from "@/app/ui/posts/postContent";
+import CreateCommentForm from "@/app/ui/comments/createCommentForm";
+import { getServerSession } from "next-auth";
+import { getUserAvatar } from "@/app/lib/data";
+import CommentsList from "@/app/ui/comments/commentsList";
 
 export default async function PostPage({
   params,
+  searchParams,
 }: {
   params: { post_id: string };
+  searchParams: { query: string };
 }) {
   const postId = params.post_id;
   const postInfo = await getPostById(postId);
-  //console.log(postInfo);
+  const session = await getServerSession();
+  const currentUserEmail = session?.user.email || "";
+  const currentUserAvatar = await getUserAvatar(currentUserEmail);
+  const query = searchParams?.query || "";
+  const comments = await getCommentsByPost({ postId, query });
+  const numberOfComments = await getNumberOfComments(postId);
+
   return (
-    <div className="pt-2">
-      <PostContent post={postInfo} key={postInfo.post_id} />
+    <div className="p-2 space-y-4">
+      <PostContent
+        post={postInfo}
+        currentUserEmail={currentUserEmail}
+        key={postInfo.post_id}
+      />
+      <h1 className="font-bold text-xl capitalize">
+        top comments({numberOfComments})
+      </h1>
+      <CreateCommentForm
+        postId={postId}
+        currentUserAvatar={currentUserAvatar}
+      />
+      <div id="commentsList" className="w-96">
+        <CommentsList comments={comments} />
+      </div>
     </div>
   );
 }

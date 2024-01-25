@@ -1,6 +1,11 @@
 import { sql } from "@vercel/postgres";
 import { unstable_noStore as noStore } from "next/cache";
-import { User, PostRaw, UpdatableUserInfo } from "@/app/lib/definitions";
+import {
+  User,
+  PostRaw,
+  UpdatableUserInfo,
+  CommentRaw,
+} from "@/app/lib/definitions";
 import { formatDate } from "@/app/lib/utils";
 
 export async function getUser(email: string): Promise<User | undefined> {
@@ -67,7 +72,8 @@ export async function getAllPosts(query: string) {
       u.id AS user_id,
       u.name AS created_by,
       u.avatar AS created_by_avatar,
-      u.username AS user_username, 
+      u.username AS user_username,
+      u.email AS user_email, 
       p.created_at,
       p.content
     FROM 
@@ -159,11 +165,66 @@ export async function getPostById(id: string) {
       ...data.rows[0],
       created_at: formatDate(data.rows[0].created_at),
     };
-
-    //await new Promise((resolve) => setTimeout(resolve, 3000));
+    //await new Promise((resolve) => setTimeout(resolve, 5000));
     return postInfo;
   } catch (error) {
     console.error("Failed to fetch post:", error);
     throw new Error("Failed to fetch post.");
+  }
+}
+
+export async function getCommentsByPost({
+  postId,
+  query,
+}: {
+  postId: string;
+  query: string;
+}) {
+  noStore();
+  try {
+    const data = await sql<CommentRaw>`
+    SELECT
+      c.id, u.id AS user_id, u.name AS user_name, u.username AS user_username, u.avatar AS user_avatar, c.created_at, c.content
+    FROM
+      users u
+    JOIN 
+      comments c on u.id = c.user_id
+    WHERE 
+      c.post_id = ${`${postId}`} 
+      AND
+        (u.name ILIKE ${`%${query}%`}
+        OR
+        c.content ILIKE ${`%${query}%`})
+    ORDER BY
+      c.created_at DESC;   
+    `;
+    const comments = data.rows.map((comment) => ({
+      ...comment,
+      created_at: formatDate(comment.created_at),
+    }));
+    //await new Promise((resolve) => setTimeout(resolve, 3000));
+    return comments;
+  } catch (error) {
+    console.error("Failed to fetch comment:", error);
+    throw new Error("Failed to fetch comment.");
+  }
+}
+
+export async function getNumberOfComments(postId: string) {
+  noStore();
+  try {
+    const data = await sql`
+    SELECT
+      COUNT(*)
+    FROM
+      comments
+    WHERE
+      post_id = ${`${postId}`} 
+    `;
+    const numberOfComments = data.rows[0].count || 0;
+    return numberOfComments;
+  } catch (error) {
+    console.error("Failed to fetch number of comments:", error);
+    throw new Error("Failed to fetch number of comments.");
   }
 }

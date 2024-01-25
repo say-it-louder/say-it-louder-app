@@ -1,13 +1,14 @@
-"use client";
 import { Post } from "@/app/lib/definitions";
 import Image from "next/image";
 import Link from "next/link";
 import DeletePostForm from "./deletePostForm";
-import { useSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import PostReactions from "./postReactions";
 
-export default function Post({ post }: { post: Post }) {
-  const { data: session } = useSession();
-  const currentUserId = session?.user.id || "";
+export default async function Post({ post }: { post: Post }) {
+  const session = await getServerSession();
+  const currentUserEmail = session?.user.email;
+
   return (
     <div className=" bg-background-600 p-2 space-y-2 ">
       <div className="flex items-center justify-between">
@@ -32,13 +33,16 @@ export default function Post({ post }: { post: Post }) {
             </span>
           </div>
         </Link>
-        {currentUserId === post.user_id && (
+        {currentUserEmail === post.user_email && (
           <DeletePostForm postId={post.post_id} />
         )}
       </div>
       <Link href={`/posts/${post.post_id}`} className="hover:brightness-75">
         <p className="font-bold text-xl">{post.content}</p>
       </Link>
+      <div>
+        <PostReactions postId={post.post_id} />
+      </div>
     </div>
   );
 }

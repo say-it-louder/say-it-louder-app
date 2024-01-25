@@ -149,3 +149,34 @@ export async function deletePost(postId: string) {
     return { message: "Database Error: Failed to Delete Invoice." };
   }
 }
+
+//Create comment
+export async function createComment(
+  commentKeys: { user: string; post: string },
+  prevState: any,
+  formData: FormData
+) {
+  noStore();
+  const validatedFields = PostSchema.safeParse({
+    content: formData.get("content"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "missing fields; failed to create comment.",
+    };
+  }
+  const { user, post } = commentKeys;
+  const { content: commentContent } = validatedFields.data;
+
+  try {
+    await sql`INSERT INTO comments (user_id, post_id, content) VALUES (${user}, ${post}, ${commentContent})
+    `;
+  } catch (error: any) {
+    return {
+      message: `database error: failed to create comment, error code: ${error.code}`,
+    };
+  }
+  revalidatePath("/");
+}
