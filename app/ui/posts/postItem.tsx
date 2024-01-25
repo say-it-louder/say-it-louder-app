@@ -36,7 +36,7 @@ export default function Post({ post }: { post: Post }) {
           <DeletePostForm postId={post.post_id} />
         )}
       </div>
-      <Link href={`posts/${post.post_id}`} className="hover:brightness-75">
+      <Link href={`/posts/${post.post_id}`} className="hover:brightness-75">
         <p className="font-bold text-xl">{post.content}</p>
       </Link>
     </div>

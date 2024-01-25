@@ -1,4 +1,4 @@
-import Post from "@/app/ui/posts/post";
+import Post from "@/app/ui/posts/postItem";
 import { Post as PostDef } from "@/app/lib/definitions";
 
 export default async function PostList({ posts }: { posts: PostDef[] }) {

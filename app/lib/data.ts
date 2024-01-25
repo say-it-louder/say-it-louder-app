@@ -132,3 +132,38 @@ export async function getPostByUser({
     throw new Error("Failed to fetch posts.");
   }
 }
+
+export async function getPostById(id: string) {
+  noStore();
+  try {
+    const data = await sql<PostRaw>`
+    SELECT 
+      p.id AS post_id,
+      u.id AS user_id,
+      u.name AS created_by,
+      u.avatar AS created_by_avatar,
+      u.username AS user_username, 
+      u.email AS user_email,
+      p.created_at,
+      p.content
+    FROM 
+      posts p 
+    JOIN 
+      users u ON p.user_id = u.id
+    WHERE
+      p.id = ${`${id}`}      
+    ORDER BY
+      p.created_at DESC`;
+
+    const postInfo = {
+      ...data.rows[0],
+      created_at: formatDate(data.rows[0].created_at),
+    };
+
+    //await new Promise((resolve) => setTimeout(resolve, 3000));
+    return postInfo;
+  } catch (error) {
+    console.error("Failed to fetch post:", error);
+    throw new Error("Failed to fetch post.");
+  }
+}
