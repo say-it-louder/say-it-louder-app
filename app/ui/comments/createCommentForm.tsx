@@ -43,6 +43,7 @@ export default function CreateCommentForm({
             placeholder="Reply..."
             rows={4}
             className="bg-background-500 border-2 border-logo-500 outline-none rounded-md w-full px-2 py-1 resize-none"
+            required
           ></textarea>
           <p className="error-message">{state?.errors?.content}</p>
         </div>

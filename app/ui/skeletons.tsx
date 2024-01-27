@@ -34,6 +34,40 @@ export function PostListSkeleton() {
       <PostSkeleton />
       <PostSkeleton />
       <PostSkeleton />
+      <PostSkeleton />
+    </div>
+  );
+}
+
+export function PostContentSkeleton() {
+  return (
+    <div className="space-y-4 animate-pulse">
+      <div className="flex items-center gap-2">
+        <AvatarSkeleton />
+        <div className="bg-gray-700 w-16 h-6 rounded-md"></div>
+      </div>
+      <div className="m-auto h-8 w-44 bg-gray-700 rounded-md"></div>
+      <div className="w-full h-2 bg-gray-700 rounded-full"></div>
+      <div className="w-full h-2 bg-gray-700 rounded-full"></div>
+      <div className="w-full h-2 bg-gray-700 rounded-full"></div>
+    </div>
+  );
+}
+
+export function NumberCommentsSkeleton() {
+  return <div className="animate-pulse w-44 h-8 bg-gray-700 rounded-md"></div>;
+}
+
+export function CreateCommentSkeleton() {
+  return (
+    <div className="animate-pulse space-y-2">
+      <div className="flex w-full gap-1">
+        <div className="w-6 h-6 rounded-full bg-gray-700"></div>
+        <div className="w-full space-y-2">
+          <div className="bg-gray-700 h-24 w-full rounded-md"></div>
+          <div className="bg-gray-700 w-24 h-10 rounded-md"></div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -9,7 +9,7 @@ export default async function CommentsList({
   const areComments = comments.length > 0;
   return (
     <div className="space-y-2 w-full">
-      {!areComments && <span>Be the first to comment on this post.</span>}
+      {!areComments && <span>No comments to show.</span>}
       {comments.map((comment) => (
         <CommentItem key={comment.id} comment={comment} />
       ))}

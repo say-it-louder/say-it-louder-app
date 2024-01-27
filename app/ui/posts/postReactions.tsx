@@ -8,10 +8,10 @@ export default async function PostReactions({ postId }: { postId: string }) {
     <div>
       <div>
         <Link
-          href={`/posts/${postId}/#commentsList`}
-          className="flex items-center gap-2 hover:brightness-75"
+          href={`/posts/${postId}`}
+          className="flex items-center gap-1 hover:brightness-75"
         >
-          <FaRegComment className="text-4xl" />
+          <FaRegComment className="text-2xl" />
           <span>{numberOfComments}</span>
         </Link>
       </div>

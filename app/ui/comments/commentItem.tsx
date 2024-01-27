@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function CommentItem({ comment }: { comment: Comment }) {
   return (
-    <div className="flex gap-1 w-full">
+    <div className="flex gap-1 w-full p-2">
       <div>
         <Link
           href={`/users/${comment.user_id}`}

@@ -8,6 +8,13 @@ import CreateCommentForm from "@/app/ui/comments/createCommentForm";
 import { getServerSession } from "next-auth";
 import { getUserAvatar } from "@/app/lib/data";
 import CommentsList from "@/app/ui/comments/commentsList";
+import { Suspense } from "react";
+import {
+  CreateCommentSkeleton,
+  NumberCommentsSkeleton,
+  PostContentSkeleton,
+  PostListSkeleton,
+} from "@/app/ui/skeletons";
 
 export default async function PostPage({
   params,
@@ -27,20 +34,31 @@ export default async function PostPage({
 
   return (
     <div className="p-2 space-y-4">
-      <PostContent
-        post={postInfo}
-        currentUserEmail={currentUserEmail}
-        key={postInfo.post_id}
-      />
-      <h1 className="font-bold text-xl capitalize">
-        top comments({numberOfComments})
-      </h1>
-      <CreateCommentForm
-        postId={postId}
-        currentUserAvatar={currentUserAvatar}
-      />
+      <Suspense fallback={<PostContentSkeleton />}>
+        <PostContent
+          post={postInfo}
+          currentUserEmail={currentUserEmail}
+          key={postInfo.post_id}
+        />
+      </Suspense>
+
+      <Suspense fallback={<NumberCommentsSkeleton />}>
+        <h1 className="font-bold text-xl capitalize">
+          top comments({numberOfComments})
+        </h1>
+      </Suspense>
+
+      <Suspense fallback={<CreateCommentSkeleton />}>
+        <CreateCommentForm
+          postId={postId}
+          currentUserAvatar={currentUserAvatar}
+        />
+      </Suspense>
+
       <div id="commentsList" className="w-96">
-        <CommentsList comments={comments} />
+        <Suspense fallback={<PostListSkeleton />}>
+          <CommentsList comments={comments} />
+        </Suspense>
       </div>
     </div>
   );

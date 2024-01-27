@@ -12,7 +12,7 @@ export default async function PostContent({
   currentUserEmail: string;
 }) {
   return (
-    <div className="bg-background-500 space-y-4">
+    <div className="bg-background-500 space-y-4 p-2 pb-4">
       <div className="flex items-center justify-between">
         <Link
           href={`/users/${post.user_id}`}

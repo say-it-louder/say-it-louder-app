@@ -13,7 +13,7 @@ export default async function Post({ post }: { post: Post }) {
     <div className=" bg-background-600 p-2 space-y-2 ">
       <div className="flex items-center justify-between">
         <Link
-          href={`/users/${post.user_id}`}
+          href={`/users/${post.user_id}/#commentsList`}
           className="flex gap-2 w-fit hover:brightness-75"
         >
           <Image

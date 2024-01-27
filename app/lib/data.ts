@@ -82,6 +82,7 @@ export async function getAllPosts(query: string) {
       users u ON p.user_id = u.id
     WHERE
       u.name ILIKE ${`%${query}%`} OR
+      u.username ILIKE ${`%${query}%`} OR
       p.content ILIKE ${`%${query}%`}
     ORDER BY
       p.created_at DESC;`;
@@ -193,6 +194,8 @@ export async function getCommentsByPost({
       c.post_id = ${`${postId}`} 
       AND
         (u.name ILIKE ${`%${query}%`}
+        OR
+        u.username ILIKE ${`%${query}%`} 
         OR
         c.content ILIKE ${`%${query}%`})
     ORDER BY
