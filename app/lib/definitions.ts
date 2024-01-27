@@ -99,6 +99,20 @@ export type PostRaw = Omit<Post, "created_at"> & {
   created_at: Date;
 };
 
+export type Comment = {
+  id: string;
+  user_id: string;
+  user_name: string;
+  user_username: string;
+  user_avatar: string;
+  created_at: string;
+  content: string;
+};
+
+export type CommentRaw = Omit<Comment, "created_at"> & {
+  created_at: Date;
+};
+
 export const AVATARS = [
   "avatar1",
   "avatar2",
