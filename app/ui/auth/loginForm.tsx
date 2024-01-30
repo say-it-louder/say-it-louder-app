@@ -3,7 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { LoginInputs, LoginSchema } from "../../lib/definitions";
+import { LoginInputs, LoginSchema } from "@/app/lib/definitions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 

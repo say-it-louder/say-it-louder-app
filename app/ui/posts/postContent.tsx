@@ -49,7 +49,7 @@ export default async function PostContent({
         </div>
       </div>
       <div>
-        <Reactions id={post.post_id} />
+        <Reactions postId={post.post_id} currentUserEmail={currentUserEmail} />
       </div>
       <div>
         <p className="font-bold text-2xl">{post.content}</p>

@@ -141,13 +141,14 @@ export async function updateUserInfo(
 // Delete post
 export async function deletePost(postId: string) {
   try {
+    await sql`DELETE FROM comments WHERE post_id = ${postId}`;
+    await sql`DELETE FROM reactions_posts WHERE post_id = ${postId}`;
     await sql`DELETE FROM posts WHERE id = ${postId}`;
-    revalidatePath("/");
     //await new Promise((resolve) => setTimeout(resolve, 5000));
-    return { message: "Deleted post." };
   } catch (error) {
     return { message: "Database Error: Failed to Delete Invoice." };
   }
+  revalidatePath("/");
 }
 
 //Create comment
@@ -177,6 +178,55 @@ export async function createComment(
     return {
       message: `database error: failed to create comment, error code: ${error.code}`,
     };
+  }
+  revalidatePath("/");
+}
+
+//Insert reaction
+export async function insertReaction({
+  reactionId,
+  postId,
+  userId,
+}: {
+  reactionId: string;
+  postId: string;
+  userId: string;
+}) {
+  noStore();
+  try {
+    //check if user has reacted to the current post
+    const hasUserReactedData = await sql`
+    SELECT
+    EXISTS (
+      SELECT 1
+      FROM reactions_posts
+      WHERE user_id = ${userId} AND post_id = ${postId}
+    ) AS has_reacted;`;
+
+    const isTheSameReactionData = await sql`
+    SELECT
+    EXISTS (
+      SELECT 1
+      FROM reactions_posts
+      WHERE user_id = ${userId} AND post_id = ${postId} AND reaction_id = ${reactionId}
+    ) AS is_same_reaction;`;
+
+    const { has_reacted: hasUserReacted } = hasUserReactedData.rows[0];
+    const { is_same_reaction: isSameReaction } = isTheSameReactionData.rows[0];
+
+    if (hasUserReacted) {
+      await sql`
+      DELETE FROM reactions_posts
+      WHERE user_id = ${userId}
+      `;
+    }
+
+    if (!isSameReaction || !hasUserReacted) {
+      await sql`INSERT INTO reactions_posts (reaction_id, post_id, user_id)
+    VALUES (${reactionId}, ${postId}, ${userId});`;
+    }
+  } catch (error) {
+    console.error("Failed to insert reaction");
   }
   revalidatePath("/");
 }

@@ -1,23 +1,29 @@
-import {
-  BsEmojiHeartEyesFill,
-  BsFillEmojiExpressionlessFill,
-  BsFillEmojiAngryFill,
-} from "react-icons/bs";
-export default function Reactions({ id }: { id: string }) {
+import { getReactionByUser, getReactionsByPost } from "@/app/lib/data";
+import ReactionItem from "@/app/ui/reactions/reactionItem";
+
+export default async function Reactions({
+  postId,
+  currentUserEmail,
+}: {
+  postId: string;
+  currentUserEmail: string;
+}) {
+  const reactions = await getReactionsByPost(postId);
+  const userEmail = currentUserEmail;
+  const { reaction_id: currentUserReaction } =
+    (await getReactionByUser({ userEmail, postId })) || "";
+  //console.log(currentUserReaction);
+
   return (
     <div className="flex justify-center items-center gap-4">
-      <div className="flex items-center gap-1">
-        <BsEmojiHeartEyesFill className="text-3xl text-yellow-500" />
-        <span>55</span>
-      </div>
-      <div className="flex items-center gap-1">
-        <BsFillEmojiExpressionlessFill className="text-3xl text-yellow-500" />
-        <span>5</span>
-      </div>
-      <div className="flex items-center gap-1">
-        <BsFillEmojiAngryFill className="text-3xl text-yellow-500" />
-        <span>11</span>
-      </div>
+      {reactions.map((reaction) => (
+        <ReactionItem
+          key={reaction.id}
+          reaction={reaction}
+          postId={postId}
+          currentUserReaction={currentUserReaction}
+        />
+      ))}
     </div>
   );
 }

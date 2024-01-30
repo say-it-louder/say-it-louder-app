@@ -113,6 +113,13 @@ export type CommentRaw = Omit<Comment, "created_at"> & {
   created_at: Date;
 };
 
+export type Reaction = {
+  id: string;
+  label: string;
+  image: string;
+  reaction_count: string;
+};
+
 export const AVATARS = [
   "avatar1",
   "avatar2",
