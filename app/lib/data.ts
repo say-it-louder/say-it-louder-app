@@ -92,7 +92,7 @@ export async function getAllPosts(query: string) {
       ...post,
       created_at: formatDate(post.created_at),
     }));
-    //await new Promise((resolve) => setTimeout(resolve, 3000));
+    //await new Promise((resolve) => setTimeout(resolve, 5000));
     return posts;
   } catch (error) {
     console.error("Failed to fetch posts:", error);

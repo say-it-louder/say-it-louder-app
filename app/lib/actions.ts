@@ -217,16 +217,15 @@ export async function insertReaction({
     if (hasUserReacted) {
       await sql`
       DELETE FROM reactions_posts
-      WHERE user_id = ${userId}
-      `;
+      WHERE user_id = ${userId} AND post_id = ${postId}`;
     }
 
     if (!isSameReaction || !hasUserReacted) {
       await sql`INSERT INTO reactions_posts (reaction_id, post_id, user_id)
     VALUES (${reactionId}, ${postId}, ${userId});`;
     }
-  } catch (error) {
-    console.error("Failed to insert reaction");
+  } catch (error: any) {
+    console.error("Failed to insert reaction", error.message);
   }
   revalidatePath("/");
 }
