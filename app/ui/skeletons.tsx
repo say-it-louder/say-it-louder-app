@@ -19,9 +19,15 @@ export function PostSkeleton() {
         <AvatarSkeleton />
         <div className="bg-gray-700 w-16 h-6 rounded-md"></div>
       </div>
-      <div className="w-full h-2 bg-gray-700 rounded-full"></div>
-      <div className="w-full h-2 bg-gray-700 rounded-full"></div>
-      <div className="w-full h-2 bg-gray-700 rounded-full"></div>
+      <div className="space-y-2">
+        <div className="w-full h-2 bg-gray-700 rounded-full"></div>
+        <div className="w-full h-2 bg-gray-700 rounded-full"></div>
+        <div className="w-full h-2 bg-gray-700 rounded-full"></div>
+      </div>
+      <div className="pt-4 flex justify-between">
+        <div className="w-36 h-8 bg-gray-700 rounded-full"></div>
+        <div className="w-10 h-8 bg-gray-700 rounded-md"></div>
+      </div>
     </div>
   );
 }

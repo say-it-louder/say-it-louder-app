@@ -5,6 +5,7 @@ import {
   PostRaw,
   UpdatableUserInfo,
   CommentRaw,
+  Reaction,
 } from "@/app/lib/definitions";
 import { formatDate } from "@/app/lib/utils";
 
@@ -91,7 +92,7 @@ export async function getAllPosts(query: string) {
       ...post,
       created_at: formatDate(post.created_at),
     }));
-    //await new Promise((resolve) => setTimeout(resolve, 3000));
+    //await new Promise((resolve) => setTimeout(resolve, 5000));
     return posts;
   } catch (error) {
     console.error("Failed to fetch posts:", error);
@@ -229,5 +230,48 @@ export async function getNumberOfComments(postId: string) {
   } catch (error) {
     console.error("Failed to fetch number of comments:", error);
     throw new Error("Failed to fetch number of comments.");
+  }
+}
+
+export async function getReactionsByPost(postId: string) {
+  noStore();
+  try {
+    const data = await sql<Reaction>`
+    SELECT 
+      r.id, r.label, r.image, COUNT(rp.reaction_id) AS reaction_count
+    FROM 
+      reactions r
+    LEFT JOIN 
+      reactions_posts rp 
+      ON r.id = rp.reaction_id 
+      AND rp.post_id = ${`${postId}`}
+    GROUP BY r.id, r.label, r.image
+    ORDER BY r.label DESC;
+    `;
+    return data.rows;
+  } catch (error) {
+    console.error("Failed to fetch reactions");
+    throw new Error("Failed to fetch reactions");
+  }
+}
+
+export async function getReactionByUser({
+  userEmail,
+  postId,
+}: {
+  userEmail: string;
+  postId: string;
+}) {
+  noStore();
+  try {
+    const data = await sql`
+    SELECT reaction_id
+    FROM reactions_posts
+    WHERE post_id = ${`${postId}`} 
+      AND user_id = (SELECT id from users WHERE email = ${`${userEmail}`})`;
+    return data.rows[0];
+  } catch (error) {
+    console.error("Failed to fetch reaction");
+    throw new Error("Failed to fetch reaction");
   }
 }

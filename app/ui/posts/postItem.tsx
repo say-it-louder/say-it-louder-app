@@ -10,7 +10,7 @@ export default async function Post({ post }: { post: Post }) {
   const currentUserEmail = session?.user.email;
 
   return (
-    <div className=" bg-background-600 p-2 space-y-2 ">
+    <div className=" bg-background-600 p-2 space-y-4 ">
       <div className="flex items-center justify-between">
         <Link
           href={`/users/${post.user_id}/#commentsList`}
