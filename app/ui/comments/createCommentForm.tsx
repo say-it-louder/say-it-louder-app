@@ -9,19 +9,25 @@ import { useRef } from "react";
 export default function CreateCommentForm({
   postId,
   currentUserAvatar,
+  commentParent,
 }: {
   postId: string;
   currentUserAvatar: string;
+  commentParent?: string;
 }) {
   const { data: session } = useSession();
   const userId = session?.user?.id || "";
-  const commentKeys = { user: userId, post: postId };
+  const commentKeys = {
+    user: userId,
+    post: postId,
+    commentParent: commentParent,
+  };
   const createCommentWithKeys = createComment.bind(null, commentKeys);
   const [state, dispatch] = useFormState(createCommentWithKeys, null);
   const formRef = useRef<HTMLFormElement | null>(null);
 
   return (
-    <div className="flex w-full gap-1">
+    <div className="flex w-full gap-1 p-2">
       <Image
         src={`/avatars/${currentUserAvatar}.png`}
         width={20}

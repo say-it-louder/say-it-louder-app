@@ -30,7 +30,10 @@ export default async function PostPage({
   const currentUserAvatar = await getUserAvatar(currentUserEmail);
   const query = searchParams?.query || "";
   const comments = await getCommentsByPost({ postId, query });
-  const numberOfComments = await getNumberOfComments(postId);
+  const numberOfComments = await getNumberOfComments({
+    id: postId,
+    type: "post",
+  });
 
   return (
     <div className="p-2 space-y-4">

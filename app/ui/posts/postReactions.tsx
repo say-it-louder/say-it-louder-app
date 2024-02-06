@@ -5,13 +5,15 @@ import { FaRegComment } from "react-icons/fa";
 import { BsReplyAll } from "react-icons/bs";
 
 export default async function PostReactions({ postId }: { postId: string }) {
-  const numberOfComments = await getNumberOfComments(postId);
+  const numberOfComments = await getNumberOfComments({
+    id: postId,
+    type: "post",
+  });
   const reactions = await getReactionsByPost(postId);
   const numberOfReactions = reactions.reduce(
     (prev, curr) => Number(curr.reaction_count) + prev,
     0
   );
-
   return (
     <div className="flex justify-between">
       <div className="flex items-center gap-6">
@@ -35,7 +37,7 @@ export default async function PostReactions({ postId }: { postId: string }) {
         </div>
         <div>
           <Link
-            href={`/posts/${postId}`}
+            href={`/posts/${postId}/#commentsList`}
             className="flex items-center gap-1 hover:brightness-75"
           >
             <FaRegComment className="text-2xl" />

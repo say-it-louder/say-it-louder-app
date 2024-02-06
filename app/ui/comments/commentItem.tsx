@@ -1,8 +1,14 @@
+import { getNumberOfComments } from "@/app/lib/data";
 import { Comment } from "@/app/lib/definitions";
 import Image from "next/image";
 import Link from "next/link";
+import { FaRegComment } from "react-icons/fa";
 
-export default function CommentItem({ comment }: { comment: Comment }) {
+export default async function CommentItem({ comment }: { comment: Comment }) {
+  const numberOfComments = await getNumberOfComments({
+    id: comment.id,
+    type: "comment",
+  });
   return (
     <div className="flex gap-1 w-full p-2">
       <div>
@@ -30,6 +36,12 @@ export default function CommentItem({ comment }: { comment: Comment }) {
         </div>
         <div>
           <p className="text-sm">{comment.content}</p>
+        </div>
+        <div className="flex items-center gap-1">
+          <Link href={`/posts/${comment.post_id}/comments/${comment.id}`}>
+            <FaRegComment className="text-xl" />
+          </Link>
+          <span className="text-sm font-semibold">{numberOfComments}</span>
         </div>
       </div>
     </div>
