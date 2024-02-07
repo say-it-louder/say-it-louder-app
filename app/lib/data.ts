@@ -288,29 +288,15 @@ export async function getNumberOfComments({
   type: string;
 }) {
   noStore();
-  let data = null;
   try {
-    if (type === "post") {
-      data = await sql`
-      SELECT
-        COUNT(*)
-      FROM
-        comments
-      WHERE      
-        post_id = ${`${id}`} 
-      `;
-    } else {
-      data = await sql`
-      SELECT
-        COUNT(*)
-      FROM
-        comments
-      WHERE      
-        parent_comment_id = ${`${id}`} 
-      `;
-    }
+    const query =
+      type === "post"
+        ? sql`SELECT COUNT(*) FROM comments WHERE post_id = ${id} AND parent_comment_id IS NULL`
+        : sql`SELECT COUNT(*) FROM comments WHERE parent_comment_id = ${id}`;
 
-    const numberOfComments = data.rows[0].count || 0;
+    const data = await query;
+    const numberOfComments = data.rows[0]?.count || 0;
+
     return numberOfComments;
   } catch (error) {
     console.error("Failed to fetch number of comments:", error);

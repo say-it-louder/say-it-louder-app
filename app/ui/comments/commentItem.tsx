@@ -35,11 +35,13 @@ export default async function CommentItem({ comment }: { comment: Comment }) {
           <span className="text-xs text-stone-500">{comment.created_at}</span>
         </div>
         <div>
-          <p className="text-sm">{comment.content}</p>
+          <Link href={`/posts/${comment.post_id}/comments/${comment.id}`}>
+            <p className="text-sm hover:brightness-75">{comment.content}</p>
+          </Link>
         </div>
         <div className="flex items-center gap-1">
           <Link href={`/posts/${comment.post_id}/comments/${comment.id}`}>
-            <FaRegComment className="text-xl" />
+            <FaRegComment className="text-xl hover:brightness-75" />
           </Link>
           <span className="text-sm font-semibold">{numberOfComments}</span>
         </div>
