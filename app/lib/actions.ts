@@ -141,14 +141,40 @@ export async function updateUserInfo(
 // Delete post
 export async function deletePost(postId: string) {
   try {
+    // delete related comments
     await sql`DELETE FROM comments WHERE post_id = ${postId}`;
+    // delete related reactions
     await sql`DELETE FROM reactions_posts WHERE post_id = ${postId}`;
+    // delete post
     await sql`DELETE FROM posts WHERE id = ${postId}`;
-    //await new Promise((resolve) => setTimeout(resolve, 5000));
   } catch (error) {
     return { message: "Database Error: Failed to Delete Invoice." };
   }
   revalidatePath("/");
+}
+
+// Delete comment
+export async function deleteComment({
+  commentId,
+  redirectPath,
+}: {
+  commentId: string;
+  redirectPath?: string;
+}) {
+  try {
+    // delete child comments
+    await sql`DELETE FROM comments WHERE parent_comment_id = ${commentId}`;
+    // delete comment
+    await sql`DELETE FROM comments WHERE id = ${commentId}`;
+  } catch (error) {
+    return { message: "Database Error: Failed to Delete Invoice." };
+  }
+
+  if (redirectPath) {
+    redirect(`/${redirectPath}`);
+  } else {
+    revalidatePath("/");
+  }
 }
 
 //Create comment
