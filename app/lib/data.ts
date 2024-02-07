@@ -186,13 +186,15 @@ export async function getCommentsByPost({
   try {
     const data = await sql<CommentRaw>`
     SELECT
-      c.id, u.id AS user_id, u.name AS user_name, u.username AS user_username, u.avatar AS user_avatar, c.created_at, c.content
+      c.id, c.post_id, u.id AS user_id, u.name AS user_name, u.username AS user_username, u.avatar AS user_avatar, c.created_at, c.content
     FROM
       users u
     JOIN 
       comments c on u.id = c.user_id
     WHERE 
       c.post_id = ${`${postId}`} 
+      AND
+      c.parent_comment_id is null
       AND
         (u.name ILIKE ${`%${query}%`}
         OR
@@ -214,18 +216,87 @@ export async function getCommentsByPost({
   }
 }
 
-export async function getNumberOfComments(postId: string) {
+export async function getCommentById(commentId: string) {
   noStore();
   try {
-    const data = await sql`
+    const data = await sql<CommentRaw>`
     SELECT
-      COUNT(*)
+      c.id, c.post_id, c.parent_comment_id, u.id AS user_id, u.name AS user_name, u.username AS user_username, u.avatar AS user_avatar, c.created_at, c.content
     FROM
-      comments
-    WHERE
-      post_id = ${`${postId}`} 
+      users u
+    JOIN 
+      comments c on u.id = c.user_id
+    WHERE 
+      c.id = ${`${commentId}`}
     `;
-    const numberOfComments = data.rows[0].count || 0;
+    const commentInfo = {
+      ...data.rows[0],
+      created_at: formatDate(data.rows[0].created_at),
+    };
+    //await new Promise((resolve) => setTimeout(resolve, 5000));
+    return commentInfo;
+  } catch (error) {
+    console.error("Failed to fetch comment:", error);
+    throw new Error("Failed to fetch comment.");
+  }
+}
+
+export async function getCommentsByCommentId({
+  commentId,
+  query,
+}: {
+  commentId: string;
+  query: string;
+}) {
+  noStore();
+  try {
+    const data = await sql<CommentRaw>`
+    SELECT
+      c.id, c.post_id, u.id AS user_id, u.name AS user_name, u.username AS user_username, u.avatar AS user_avatar, c.created_at, c.content
+    FROM
+      users u
+    JOIN 
+      comments c on u.id = c.user_id
+    WHERE 
+      c.parent_comment_id = ${`${commentId}`}
+      AND
+      (u.name ILIKE ${`%${query}%`}
+      OR
+      u.username ILIKE ${`%${query}%`} 
+      OR
+      c.content ILIKE ${`%${query}%`}) 
+    ORDER BY
+      c.created_at DESC;   
+    `;
+    const comments = data.rows.map((comment) => ({
+      ...comment,
+      created_at: formatDate(comment.created_at),
+    }));
+    //await new Promise((resolve) => setTimeout(resolve, 3000));
+    return comments;
+  } catch (error) {
+    console.error("Failed to fetch comment:", error);
+    throw new Error("Failed to fetch comment.");
+  }
+}
+
+export async function getNumberOfComments({
+  id,
+  type,
+}: {
+  id: string;
+  type: string;
+}) {
+  noStore();
+  try {
+    const query =
+      type === "post"
+        ? sql`SELECT COUNT(*) FROM comments WHERE post_id = ${id} AND parent_comment_id IS NULL`
+        : sql`SELECT COUNT(*) FROM comments WHERE parent_comment_id = ${id}`;
+
+    const data = await query;
+    const numberOfComments = data.rows[0]?.count || 0;
+
     return numberOfComments;
   } catch (error) {
     console.error("Failed to fetch number of comments:", error);

@@ -101,6 +101,8 @@ export type PostRaw = Omit<Post, "created_at"> & {
 
 export type Comment = {
   id: string;
+  post_id: string;
+  parent_comment_id: string;
   user_id: string;
   user_name: string;
   user_username: string;

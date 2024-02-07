@@ -153,7 +153,7 @@ export async function deletePost(postId: string) {
 
 //Create comment
 export async function createComment(
-  commentKeys: { user: string; post: string },
+  commentKeys: { user: string; post: string; commentParent?: string },
   prevState: any,
   formData: FormData
 ) {
@@ -168,11 +168,11 @@ export async function createComment(
       message: "missing fields; failed to create comment.",
     };
   }
-  const { user, post } = commentKeys;
+  const { user, post, commentParent } = commentKeys;
   const { content: commentContent } = validatedFields.data;
 
   try {
-    await sql`INSERT INTO comments (user_id, post_id, content) VALUES (${user}, ${post}, ${commentContent})
+    await sql`INSERT INTO comments (user_id, post_id, parent_comment_id, content) VALUES (${user}, ${post}, ${commentParent}, ${commentContent})
     `;
   } catch (error: any) {
     return {
