@@ -5,7 +5,13 @@ import Link from "next/link";
 import { FaRegComment } from "react-icons/fa";
 import DeleteCommentForm from "./deleteCommentForm";
 
-export default async function CommentItem({ comment }: { comment: Comment }) {
+export default async function CommentItem({
+  comment,
+  isParent,
+}: {
+  comment: Comment;
+  isParent?: boolean;
+}) {
   const numberOfComments = await getNumberOfComments({
     id: comment.id,
     type: "comment",
@@ -27,7 +33,11 @@ export default async function CommentItem({ comment }: { comment: Comment }) {
           />
         </Link>
       </div>
-      <div className="bg-background-400 rounded-md p-1 w-full space-y-3">
+      <div
+        className={`${
+          isParent ? "bg-background-500" : "bg-background-400"
+        } rounded-md p-1 w-full space-y-3`}
+      >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="font-bold text-sm">
@@ -38,11 +48,13 @@ export default async function CommentItem({ comment }: { comment: Comment }) {
             <span className="text-xs text-stone-500">{comment.created_at}</span>
           </div>
           <div>
-            <DeleteCommentForm
-              commentId={comment.id}
-              redirectPath={`posts/${comment.post_id}`}
-              commentUserId={comment.user_id}
-            />
+            {!isParent && (
+              <DeleteCommentForm
+                commentId={comment.id}
+                redirectPath={`posts/${comment.post_id}`}
+                commentUserId={comment.user_id}
+              />
+            )}
           </div>
         </div>
         <div>

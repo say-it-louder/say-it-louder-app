@@ -65,7 +65,7 @@ export default async function CommentPage({
       {parentCommentId && (
         <div>
           <Suspense fallback={<PostContentSkeleton />}>
-            <CommentItem comment={parentComment} />
+            <CommentItem comment={parentComment} isParent={true} />
           </Suspense>
         </div>
       )}
