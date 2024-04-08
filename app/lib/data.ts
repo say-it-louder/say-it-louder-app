@@ -304,18 +304,18 @@ export async function getNumberOfComments({
   }
 }
 
-export async function getReactionsByPost(postId: string) {
+export async function getReactionsByEntity(id: string) {
   noStore();
   try {
     const data = await sql<Reaction>`
     SELECT 
-      r.id, r.label, r.image, COUNT(rp.reaction_id) AS reaction_count
+      r.id, r.label, r.image, r.type, COUNT(re.reaction_id) AS reaction_count
     FROM 
       reactions r
     LEFT JOIN 
-      reactions_posts rp 
-      ON r.id = rp.reaction_id 
-      AND rp.post_id = ${`${postId}`}
+      reactions_entity re 
+      ON r.id = re.reaction_id 
+      AND re.entity_id = ${`${id}`}
     GROUP BY r.id, r.label, r.image
     ORDER BY r.label DESC;
     `;
@@ -328,21 +328,21 @@ export async function getReactionsByPost(postId: string) {
 
 export async function getReactionByUser({
   userEmail,
-  postId,
+  entityId,
 }: {
   userEmail: string;
-  postId: string;
+  entityId: string;
 }) {
   noStore();
   try {
     const data = await sql`
     SELECT reaction_id
-    FROM reactions_posts
-    WHERE post_id = ${`${postId}`} 
+    FROM reactions_entity
+    WHERE entity_id = ${`${entityId}`} 
       AND user_id = (SELECT id from users WHERE email = ${`${userEmail}`})`;
     return data.rows[0];
   } catch (error) {
-    console.error("Failed to fetch reaction");
-    throw new Error("Failed to fetch reaction");
+    console.error("Failed to fetch reaction by user");
+    throw new Error("Failed to fetch reaction by user");
   }
 }

@@ -140,11 +140,12 @@ export async function updateUserInfo(
 
 // Delete post
 export async function deletePost(postId: string) {
+  noStore();
   try {
     // delete related comments
     await sql`DELETE FROM comments WHERE post_id = ${postId}`;
     // delete related reactions
-    await sql`DELETE FROM reactions_posts WHERE post_id = ${postId}`;
+    await sql`DELETE FROM reactions_entity WHERE entity_id = ${postId}`;
     // delete post
     await sql`DELETE FROM posts WHERE id = ${postId}`;
   } catch (error) {
@@ -161,11 +162,16 @@ export async function deleteComment({
   commentId: string;
   redirectPath?: string;
 }) {
+  noStore();
+  console.log("delete comment entry");
   try {
     // delete child comments
+    console.log("delete parent comment open");
     await sql`DELETE FROM comments WHERE parent_comment_id = ${commentId}`;
+    console.log("parent comment deleted");
     // delete comment
     await sql`DELETE FROM comments WHERE id = ${commentId}`;
+    console.log("comment deleted");
   } catch (error) {
     return { message: "Database Error: Failed to Delete Invoice." };
   }
@@ -211,30 +217,30 @@ export async function createComment(
 //Insert reaction
 export async function insertReaction({
   reactionId,
-  postId,
+  entityId,
   userId,
 }: {
   reactionId: string;
-  postId: string;
+  entityId: string;
   userId: string;
 }) {
   noStore();
   try {
-    //check if user has reacted to the current post
+    //check if user has reacted to the current entity
     const hasUserReactedData = await sql`
     SELECT
     EXISTS (
       SELECT 1
-      FROM reactions_posts
-      WHERE user_id = ${userId} AND post_id = ${postId}
+      FROM reactions_entity
+      WHERE user_id = ${userId} AND entity_id = ${entityId}
     ) AS has_reacted;`;
 
     const isTheSameReactionData = await sql`
     SELECT
     EXISTS (
       SELECT 1
-      FROM reactions_posts
-      WHERE user_id = ${userId} AND post_id = ${postId} AND reaction_id = ${reactionId}
+      FROM reactions_entity
+      WHERE user_id = ${userId} AND entity_id = ${entityId} AND reaction_id = ${reactionId}
     ) AS is_same_reaction;`;
 
     const { has_reacted: hasUserReacted } = hasUserReactedData.rows[0];
@@ -242,13 +248,13 @@ export async function insertReaction({
 
     if (hasUserReacted) {
       await sql`
-      DELETE FROM reactions_posts
-      WHERE user_id = ${userId} AND post_id = ${postId}`;
+      DELETE FROM reactions_entity
+      WHERE user_id = ${userId} AND entity_id = ${entityId}`;
     }
 
     if (!isSameReaction || !hasUserReacted) {
-      await sql`INSERT INTO reactions_posts (reaction_id, post_id, user_id)
-    VALUES (${reactionId}, ${postId}, ${userId});`;
+      await sql`INSERT INTO reactions_entity (reaction_id, entity_id, user_id)
+    VALUES (${reactionId}, ${entityId}, ${userId});`;
     }
   } catch (error: any) {
     console.error("Failed to insert reaction", error.message);

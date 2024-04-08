@@ -1,4 +1,4 @@
-import { getReactionByUser, getReactionsByPost } from "@/app/lib/data";
+import { getReactionByUser, getReactionsByEntity } from "@/app/lib/data";
 import ReactionItem from "@/app/ui/reactions/reactionItem";
 
 export default async function Reactions({
@@ -8,11 +8,10 @@ export default async function Reactions({
   postId: string;
   currentUserEmail: string;
 }) {
-  const reactions = await getReactionsByPost(postId);
+  const reactions = await getReactionsByEntity(postId);
   const userEmail = currentUserEmail;
   const { reaction_id: currentUserReaction } =
-    (await getReactionByUser({ userEmail, postId })) || "";
-  //console.log(currentUserReaction);
+    (await getReactionByUser({ userEmail, entityId: postId })) || "";
 
   return (
     <div className="flex justify-center items-center gap-4">
