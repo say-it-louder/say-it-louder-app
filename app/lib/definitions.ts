@@ -119,6 +119,7 @@ export type Reaction = {
   id: string;
   label: string;
   image: string;
+  type: string;
   reaction_count: string;
 };
 

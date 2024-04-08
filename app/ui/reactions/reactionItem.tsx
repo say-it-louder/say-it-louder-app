@@ -21,7 +21,7 @@ export default function ReactionItem({
 
   async function handleInsertReaction() {
     setIsInserting(true);
-    await insertReaction({ reactionId, postId, userId });
+    await insertReaction({ reactionId, entityId: postId, userId });
     setIsInserting(false);
   }
 
