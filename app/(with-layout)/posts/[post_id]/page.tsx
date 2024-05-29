@@ -35,6 +35,8 @@ export default async function PostPage({
     type: "post",
   });
 
+  if (!postInfo) return;
+
   return (
     <div className="p-2 space-y-4">
       <Suspense fallback={<PostContentSkeleton />}>

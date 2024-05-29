@@ -10,6 +10,7 @@ import {
 import bcrypt from "bcrypt";
 import { isUsernameAvailable } from "@/app/lib/utils";
 
+// Create user
 export async function createUser(prevState: any, formData: FormData) {
   // Validate form fields using Zod
   const validatedFields = SignUpSchema.safeParse({
