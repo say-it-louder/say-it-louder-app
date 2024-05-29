@@ -21,7 +21,7 @@ export default function Error({
       <button
         className="mt-4 rounded-md bg-logo-500 px-4 py-2 text-sm transition-colors hover:brightness-75"
         onClick={
-          // Attempt to recover by trying to re-render the invoices route
+          // Attempt to recover by trying to re-render the posts route
           () => reset()
         }
       >

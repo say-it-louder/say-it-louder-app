@@ -1,11 +1,11 @@
-import { Post } from "@/app/lib/definitions";
+import { Post as PostDef } from "@/app/lib/definitions";
 import Image from "next/image";
 import Link from "next/link";
 import DeletePostForm from "./deletePostForm";
 import { getServerSession } from "next-auth";
 import PostReactions from "./postReactions";
 
-export default async function Post({ post }: { post: Post }) {
+export default async function Post({ post }: { post: PostDef }) {
   const session = await getServerSession();
   const currentUserEmail = session?.user.email;
 
